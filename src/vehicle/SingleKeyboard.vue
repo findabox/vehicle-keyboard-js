@@ -1,7 +1,9 @@
 <template>
   <div class="single-keyboard-box">
-    <keyboard-view :keyboard="dyKeyboard" :keycount="dyKeyCount" @onkeyclick="onClickKey"
-      @onmoreclick="onClickShowAll" />
+    <keyboard-view :keyboard="dyKeyboard"
+      :keycount="dyKeyCount"
+      @keyclick="onClickKey"
+      @moreclick="onClickShowAll" />
   </div>
 </template>
 <script>
@@ -267,6 +269,6 @@ export default {
 };
 </script>
 
-<style global>
-@import './keyboard.css';
+<style lang="scss">
+@import './keyboard';
 </style>

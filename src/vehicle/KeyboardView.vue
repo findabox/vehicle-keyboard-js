@@ -1,19 +1,39 @@
 <template>
-    <div id="keyboard-pad" v-if="hasShortcut">
-        <shortcut-view :shortcuts="shortcuts" @onkeyrowclick="onKeyClick" @onshowmoreclick="onShowMoreClick"/>
-    </div>
-    <div id="keyboard-pad" v-else>
-        <row-view :keys="keyboard.row0" :keycount="kc" :rowcount="rc" @onkeyrowclick="onKeyClick"/>
-        <row-view :keys="keyboard.row1" :keycount="kc" :rowcount="rc" @onkeyrowclick="onKeyClick"/>
-        <row-view :keys="keyboard.row2" :keycount="kc" :rowcount="rc" @onkeyrowclick="onKeyClick"/>
-        <row-view :keys="keyboard.row3" :keycount="kc" :rowcount="rc" @onkeyrowclick="onKeyClick" :isfunc="keyboard.row4.length == 0" />
-        <row-view :keys="keyboard.row4" :keycount="kc" :rowcount="rc" @onkeyrowclick="onKeyClick" :isfunc="true"  v-if="keyboard.row4.length > 0" />
-        <div id="keytip" 
-            class="r-border"
-            v-if="tipText != ''"
-            :style="{'left': tipPosX, 'top': tipPosY}"
-            >{{ tipText }} </div>
-    </div>
+  <div class="keyboard"
+    v-if="hasShortcut">
+    <shortcut-view :shortcuts="shortcuts"
+      @keyrowclick="onKeyClick"
+      @showmoreclick="onShowMoreClick" />
+  </div>
+  <div class="keyboard"
+    v-else>
+    <row-view :keys="keyboard.row0"
+      :keycount="keycount"
+      :rowcount="rc"
+      @keyrowclick="onKeyClick" />
+    <row-view :keys="keyboard.row1"
+      :keycount="keycount"
+      :rowcount="rc"
+      @keyrowclick="onKeyClick" />
+    <row-view :keys="keyboard.row2"
+      :keycount="keycount"
+      :rowcount="rc"
+      @keyrowclick="onKeyClick" />
+    <row-view :keys="keyboard.row3"
+      :keycount="keycount"
+      :rowcount="rc"
+      @keyrowclick="onKeyClick"
+      :isfunc="keyboard.row4.length == 0" />
+    <row-view :keys="keyboard.row4"
+      :keycount="keycount"
+      :rowcount="rc"
+      @keyrowclick="onKeyClick"
+      :isfunc="true"
+      v-if="keyboard.row4.length > 0" />
+    <div class="r-border keytip"
+      v-if="tipText != ''"
+      :style="{'left': tipPosX, 'top': tipPosY}">{{ tipText }} </div>
+  </div>
 </template>
 
 <script>
@@ -40,12 +60,6 @@ export default {
     return { tipText: '', tipPosX: '0px', tipPosY: '0px' };
   },
   computed: {
-    /**
-     * 键数
-     */
-    kc() {
-      return this.keycount;
-    },
     /**
      * 行数
      */
@@ -95,14 +109,14 @@ export default {
      * @param {Event} evt
      */
     onKeyClick(key, evt) {
-      this.$emit('onkeyclick', key);
+      this.$emit('keyclick', key);
       evt && this.onKeyEvent(key, evt);
     },
     /**
      * 显示更多事件
      */
     onShowMoreClick() {
-      this.$emit('onmoreclick');
+      this.$emit('moreclick');
     }
   },
   components: {

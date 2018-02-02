@@ -1,17 +1,16 @@
 <template>
-    <ul class="keyrow" 
-        :class="[ {'funcrow': (isfunc === true)}, ('rowsof-' + rowcount) ]">
-        <li v-for="(key, i) in keys"
-            :key="i"
-            :class="('keysof-' + keycount)">
-            <button
-                tag="button"
-                class="key r-border txt-key"
-                :class="[ ('keycodeof-' + key.keyCode), {'disabled': (!key.enabled)}]"
-                :disabled="(!key.enabled)"
-                @click="onButtonClick(key, arguments[0])">{{ key.text | deleteTextFilter }}</button>
-        </li>
-    </ul>
+  <ul class="keyrow"
+    :class="[ {'funcrow': (isfunc === true)}, ('rowsof-' + rowcount) ]">
+    <li v-for="(key, i) in keys"
+      :key="i"
+      :class="('keysof-' + keycount)">
+      <button tag="button"
+        class="key r-border txt-key"
+        :class="[ ('keycodeof-' + key.keyCode), {'disabled': (!key.enabled)}]"
+        :disabled="(!key.enabled)"
+        @click="onButtonClick(key, arguments[0])">{{ key.text | deleteTextFilter }}</button>
+    </li>
+  </ul>
 </template>
 <script>
 export default {
@@ -66,7 +65,7 @@ export default {
      */
     onButtonClick(key, event) {
       if (key.enabled) {
-        this.$emit('onkeyrowclick', key, event);
+        this.$emit('keyrowclick', key, event);
       }
     }
   }
