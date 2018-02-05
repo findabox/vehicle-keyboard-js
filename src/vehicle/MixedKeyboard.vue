@@ -26,6 +26,7 @@ export default {
      * @param {Number} keyboardType 键盘类型[0:全键盘，1：民用, 2：民用+武警]
      * @param {String} provinceName 默认省份
      * @param {Boolean} forceChangeMode 是否强制切换键盘类型（忽略当前录入车牌有效性）
+     * @param {Boolean} autoComplete 是否自动完成
      */
     args: {
       type: Object,
@@ -57,7 +58,8 @@ export default {
         currentIndex: 0, // 当前用户输入框已选中的序号
         showShortCut: true, // 需要显示省份简称
         forceChangeMode: true, //是否强制切换键盘类型
-        numberType: engine.NUM_TYPES.AUTO_DETECT // 车用户设定的车牌号码类型 0：自动探测车牌类型，5:新能源车牌
+        numberType: engine.NUM_TYPES.AUTO_DETECT, // 车用户设定的车牌号码类型 0：自动探测车牌类型，5:新能源车牌
+        autoComplete: true //是否自动完成
       },
       numberArray: ['', '', '', '', '', '', ''], // 用户输入的车牌数据
       userChanged: false, //用户是否外部修改了车牌号码
@@ -79,6 +81,7 @@ export default {
           } else {
             this.onTextKeyClick(key.text);
           }
+          this.callMethod(this.callbacks.onkeypressed, key);
           return true;
         },
         onmessage: message => {

@@ -20,6 +20,7 @@ export default {
      * @param {Number} currentIndex 当前输入位置
      * @param {String} provinceName 默认省份
      * @param {Number} numberType 用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
+     * @param {Boolean} autoComplete 是否自动完成
      */
     args: {
       type: Object,
@@ -52,7 +53,8 @@ export default {
         currentIndex: 0, //当前输入位置
         numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
         provinceName: '', //省份
-        showShortCut: false //是否显示快捷省份
+        showShortCut: false, //是否显示快捷省份
+        autoComplete: true //是否自动完成
       },
       prevNumber: '', //缓存上次车牌
       layout: {},
@@ -131,7 +133,7 @@ export default {
               isCompleted
             );
           } finally {
-            if (isCompleted) {
+            if (isCompleted && this.options.autoComplete === true) {
               this.callMethod(
                 this.callbacks.oncompleted,
                 this.layout.presetNumber,

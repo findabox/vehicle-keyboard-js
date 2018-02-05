@@ -109,4 +109,65 @@ native_update_keyboard("京A12345", 1, "广东省", 0, -1);
 
 #### 第四步：
 
-如果需要根据控制DIV的SHOW / HIDE，可以通过控制`div#single-keyboard-box`的状态来实现。
+如果需要根据控制DIV的SHOW / HIDE，可以通过控制`div.single-keyboard-box`的状态来实现。
+
+
+## Vue项目使用说明
+
+#### 第一步：
+
+导入 vehicle/SingleKeyboard.vue：
+
+```template
+    <mixed-keyboard 
+		:args="{presetNumber, autoComplete: false}" 
+		:callbacks="{oncompleted, onkeypressed}">
+	</mixed-keyboard>
+```
+```js
+    import SingleKeyboard from '@/components/vehicle/SingleKeyboard'
+	...
+	data() {
+		args: {
+			presetNumber: '', //预设车牌号码。可以是空车牌号码或者完整车牌。注意：参数不可为空，当空车牌时，设置空字符串**
+			keyboardType: 1,  //键盘类型[0:全键盘，1：民用, 2：民用+武警]
+			currentIndex: 0,  //当前输入位置
+			provinceName: '', //默认省份
+			numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
+			autoComplete: true //是否自动完成
+		},
+		callbacks: {
+			//车牌变更
+			onchanged: (presetNumber, isCompleted) => {
+			  // this.args.presetNumber = presetNumber;
+			  console.log(
+				'当前车牌[变更]：' + presetNumber + ', 已完成:' + isCompleted
+			  );
+			},
+			//键位监听
+			onkeypressed: key => {
+			  console.log('当前按键：' + key.text);
+			},
+			//车牌输入完成，当 args.autoComplete 为 true 时，仅当点击 ‘确定’ 时，才调用
+			oncompleted: (presetNumber, isAutoCompleted) => {
+			  this.numberArray = presetNumber.split('');
+			  console.log(
+				'当前车牌[完成]：' + presetNumber + ', 自动完成:' + isAutoCompleted
+			  );
+			},
+			//消息提示
+			onmessage: function(message) {
+			  console.info(message);
+			}
+		}
+	}
+	...
+	components: {
+		'single-keyboard': SingleKeyboard
+	}
+```
+
+
+#### 第二步：
+
+如果需要根据控制DIV的SHOW / HIDE，可以通过控制`div.single-keyboard-box`的状态来实现。
