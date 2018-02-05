@@ -25,14 +25,14 @@
 
 ## 键盘输入框混合组件使用说明
 
-[键盘输入框混合组件](./MixedKeyboardUsage.md)
+[键盘输入框混合组件(js文件版)](./MixedKeyboardUsage.md)
 
 混合组件包括键盘和输入框两部分组件，具有完成的车牌输入逻辑。
 
 基于VUE.js实现的单组件，单JS文件，包含vue核心库，文件大小约 114KB。
 
 
-[键盘输入框混合组件](./MixedKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+[键盘输入框混合组件(vue组件版)](./MixedKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
 
 混合组件包括键盘和输入框两部分组件，具有完成的车牌输入逻辑。
 
@@ -40,14 +40,14 @@
 
 ## 单键盘组件使用说明
 
-[单键盘组件的使用方法](./SingleKeyboardUsage.md)
+[单键盘组件的使用方法(js文件版)](./SingleKeyboardUsage.md)
 
 单键盘组件只包含键盘组件部分。
 
 基于VUE.js实现的单组件，单JS文件，包含vue核心库，文件大小约 105KB。
 
 
-[键盘输入框混合组件](./SingleKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+[单键盘组件的使用方法(vue组件版)](./SingleKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
 
 单键盘组件只包含键盘组件部分。
 
