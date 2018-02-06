@@ -19,8 +19,8 @@ const install = function (Vue, opts = {}) {
 if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue);
 };
-
-export default {
+export default install
+export {
   install,
   NumberView,
   SingleKeyboard,
