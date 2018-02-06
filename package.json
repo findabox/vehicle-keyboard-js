@@ -1,13 +1,24 @@
 {
   "name": "keyboard-js",
   "description": "A VEHICLE-KEYBOARD-NUMBER keyboard",
-  "version": "1.7.0",
-  "author": "YooJia.Chen <yoojiachen@gmail.com>",
+  "version": "1.8.0",
+  "author": "mvpleung <mvpleung@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress --colors --inline --hot --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvpleung/vehicle-keyboard-js.git"
+  },
+  "keywords": [
+    "vehicle",
+    "keyboard",
+    "plugin"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/mvpleung/vehicle-keyboard-js/tree/v2#readme",
   "dependencies": {
     "browser-sync": "^2.18.6",
     "vue": "^2.1.0"
