@@ -120,6 +120,8 @@ native_update_keyboard("京A12345", 2);
 
 #### 安装：
 
+```javascript
+
 npm i vehicle-keyboard -S
 
 import vehicleKeyboard from 'vehicle-keyboard'

@@ -118,6 +118,8 @@ native_update_keyboard("京A12345", 1, "广东省", 0, -1);
 
 #### 安装：
 
+```javascript
+
 npm i vehicle-keyboard -S
 
 import vehicleKeyboard from 'vehicle-keyboard'
