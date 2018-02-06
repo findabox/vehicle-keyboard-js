@@ -3,6 +3,7 @@
   "description": "A VEHICLE-KEYBOARD-NUMBER keyboard for vue",
   "version": "0.0.1",
   "author": "mvpleung <mvpleung@gmail.com>",
+  "main": "./src/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress --colors --inline --hot --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
