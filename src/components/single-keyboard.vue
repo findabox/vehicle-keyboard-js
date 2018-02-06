@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import KeyboardView from './KeyboardView.vue';
+import KeyboardView from './keyboard-view.vue';
 let engine = require('./engine.js');
 let provinces = require('./provinces.js');
 export default {

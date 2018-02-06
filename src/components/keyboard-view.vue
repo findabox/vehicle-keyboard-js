@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import KeyRowView from './KeyRowView.vue';
-import ShortcutView from './ShortcutView.vue';
+import KeyRowView from './key-row-view';
+import ShortcutView from './shortcut-view';
 export default {
   props: {
     /**

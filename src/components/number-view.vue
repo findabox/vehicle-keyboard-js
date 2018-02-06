@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  name: 'number-view',
   props: {
     /**
      * 号码数组

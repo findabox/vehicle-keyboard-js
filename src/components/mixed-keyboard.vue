@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import NumberView from './NumberView.vue';
-import SingleKeyboard from './SingleKeyboard';
+import NumberView from './number-view';
+import SingleKeyboard from './single-keyboard';
 let engine = require('./engine.js');
 export default {
   name: 'mixed-keyboard',

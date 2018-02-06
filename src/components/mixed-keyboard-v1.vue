@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import NumberView from './NumberView.vue';
-import KeyboardView from './KeyboardView.vue';
+import NumberView from './number-view';
+import KeyboardView from './keyboard-view';
 let engine = require('./engine.js');
 let provinces = require('./provinces.js');
 export default {
