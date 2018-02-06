@@ -61,7 +61,9 @@ native_update_keyboard(presetNumber, keyboardType, provinceName);
 
 #### 第一步：
 
-在HTML页面声明键盘显示的`DIV`标签，同时导入`MixedKeyboard.js`文件：
+npm i vehicle-keyboard -S
+
+在HTML页面声明键盘显示的`DIV`标签，同时导入`vehicle-keyboard/MixedKeyboard.js`文件：
 
 ```html
     <div id="single-keyboard-box">
@@ -116,9 +118,16 @@ native_update_keyboard("京A12345", 2);
 
 ## Vue项目使用说明
 
-#### 第一步：
+#### 安装：
 
-导入 vehicle/MixedKeyboard.vue：
+npm i vehicle-keyboard -S
+
+import vehicleKeyboard from 'vehicle-keyboard'
+
+Vue.use(vehicleKeyboard)
+```
+
+#### 使用：
 
 ```template
     <mixed-keyboard 
@@ -127,7 +136,6 @@ native_update_keyboard("京A12345", 2);
 	</mixed-keyboard>
 ```
 ```js
-    import MixedKeyboard from '@/components/vehicle/MixedKeyboard'
 	...
 	data() {
 		args: {
@@ -162,13 +170,8 @@ native_update_keyboard("京A12345", 2);
 			}
 		}
 	}
-	...
-	components: {
-		'mixed-keyboard': MixedKeyboard
-	}
 ```
 
-
-#### 第二步：
+#### 说明：
 
 如果需要根据控制DIV的SHOW / HIDE，可以通过控制`div.mixed-keyboard-box`的状态来实现。

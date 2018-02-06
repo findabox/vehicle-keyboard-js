@@ -41,7 +41,9 @@
 
 #### 第一步：
 
-在HTML页面声明键盘显示的`DIV`标签，同时导入`SingleKeyboard.js`文件：
+npm i vehicle-keyboard -S
+
+在HTML页面声明键盘显示的`DIV`标签，同时导入`vehicle-keyboard/SingleKeyboard.js`文件：
 
 ```html
     <div id="single-keyboard-box">
@@ -114,9 +116,16 @@ native_update_keyboard("京A12345", 1, "广东省", 0, -1);
 
 ## Vue项目使用说明
 
-#### 第一步：
+#### 安装：
 
-导入 vehicle/SingleKeyboard.vue：
+npm i vehicle-keyboard -S
+
+import vehicleKeyboard from 'vehicle-keyboard'
+
+Vue.use(vehicleKeyboard)
+```
+
+#### 使用：
 
 ```template
     <mixed-keyboard 
@@ -125,8 +134,6 @@ native_update_keyboard("京A12345", 1, "广东省", 0, -1);
 	</mixed-keyboard>
 ```
 ```js
-    import SingleKeyboard from '@/components/vehicle/SingleKeyboard'
-	...
 	data() {
 		args: {
 			presetNumber: '', //预设车牌号码。可以是空车牌号码或者完整车牌。注意：参数不可为空，当空车牌时，设置空字符串**
@@ -161,13 +168,8 @@ native_update_keyboard("京A12345", 1, "广东省", 0, -1);
 			}
 		}
 	}
-	...
-	components: {
-		'single-keyboard': SingleKeyboard
-	}
 ```
 
-
-#### 第二步：
+#### 说明：
 
 如果需要根据控制DIV的SHOW / HIDE，可以通过控制`div.single-keyboard-box`的状态来实现。
