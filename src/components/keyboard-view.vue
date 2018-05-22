@@ -1,11 +1,11 @@
 <template>
-  <div class="keyboard"
+  <div class="vehicle-keyboard"
     v-if="hasShortcut">
     <shortcut-view :shortcuts="shortcuts"
       @keyrowclick="onKeyClick"
       @showmoreclick="onShowMoreClick" />
   </div>
-  <div class="keyboard"
+  <div class="vehicle-keyboard"
     v-else>
     <row-view :keys="keyboard.row0"
       :keycount="keycount"
@@ -23,12 +23,14 @@
       :keycount="keycount"
       :rowcount="rc"
       @keyrowclick="onKeyClick"
-      :isfunc="keyboard.row4.length == 0" />
+      :isfunc="keyboard.row4.length == 0"
+      :show-confirm="showConfirm" />
     <row-view :keys="keyboard.row4"
       :keycount="keycount"
       :rowcount="rc"
       @keyrowclick="onKeyClick"
       :isfunc="true"
+      :show-confirm="showConfirm"
       v-if="keyboard.row4.length > 0" />
     <div class="r-border keytip"
       v-if="tipText != ''"
@@ -54,6 +56,13 @@ export default {
     keycount: {
       type: Number,
       default: 0
+    },
+    /**
+     * 是否显示确认按钮
+     */
+    showConfirm: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

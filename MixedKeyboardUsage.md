@@ -145,7 +145,8 @@ Vue.use(vehicleKeyboard)
 			keyboardType: 1,  //键盘类型[0:全键盘，1：民用, 2：民用+武警]
 			provinceName: '', //默认省份
 			forceChangeMode: true, //是否强制切换键盘类型（忽略当前录入车牌有效性）
-			autoComplete: true //是否自动完成
+			autoComplete: true, //是否自动完成
+			showConfirm: true   //是否显示确认按钮，默认位true
 		},
 		callbacks: {
 			//车牌变更

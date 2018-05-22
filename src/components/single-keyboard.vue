@@ -2,6 +2,7 @@
   <div class="single-keyboard-box">
     <keyboard-view :keyboard="dyKeyboard"
       :keycount="dyKeyCount"
+      :show-confirm="args.showConfirm"
       @keyclick="onClickKey"
       @moreclick="onClickShowAll" />
   </div>
@@ -21,6 +22,7 @@ export default {
      * @param {String} provinceName 默认省份
      * @param {Number} numberType 用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
      * @param {Boolean} autoComplete 是否自动完成
+     * @param {Boolean} showConfirm 是否显示确定按钮
      */
     args: {
       type: Object,
@@ -95,12 +97,13 @@ export default {
      */
     init(args) {
       this.options = Object.assign({}, this.options, args);
+      !args.hasOwnProperty('showConfirm') && (this.args.showConfirm = true);
       //showShortCut 没有传递进来时，默认通过 provinceName 来判断
       !args.hasOwnProperty('showShortCut') &&
         this.$set(
           this.options,
           'showShortCut',
-          this.options.provinceName != undefined &&
+          this.options.provinceName !== undefined &&
             this.options.provinceName.length > 0
         );
     },
@@ -198,9 +201,9 @@ export default {
       key.FUN_OK = engine.KEY_TYPES.FUN_OK === key.keyCode; //确认
       this.currentKey = key;
       try {
-        let autoSlice = this.callbacks.onkeypressed
-          ? this.callbacks.onkeypressed(key)
-          : true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
+        let autoSlice = this.callbacks.onkeypressed ?
+          this.callbacks.onkeypressed(key) :
+          true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
         if (key.FUN_DEL) {
           if (autoSlice) {
             this.options.presetNumber = this.options.presetNumber.slice(
@@ -229,9 +232,9 @@ export default {
               this.options.presetNumber += key.text;
             }
           }
-          this.options.currentIndex === 0
-            ? this.options.currentIndex++
-            : this.options.currentIndex < this.layout.numberLimitLength - 1 &&
+          this.options.currentIndex === 0 ?
+            this.options.currentIndex++ :
+            this.options.currentIndex < this.layout.numberLimitLength - 1 &&
               this.options.currentIndex++;
         }
       } finally {

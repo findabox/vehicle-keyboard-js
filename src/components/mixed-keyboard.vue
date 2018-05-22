@@ -1,12 +1,11 @@
 <template>
   <div class="mixed-keyboard-box">
-    <number-view :numberArray="numberArray"
-      :numberType="dyDisplayMode"
-      :currentIndex="options.currentIndex"
+    <number-view :number-array="numberArray"
+      :number-type="dyDisplayMode"
+      :current-index="options.currentIndex"
       @modechanged="onUserSetMode"
       @cellselected="onSelectedInput" />
-    <div class="divider" />
-    <slot></slot>
+    <slot />
     <single-keyboard ref="singleKeyboard"
       :args="options"
       :callbacks="singleCallbacks" />
@@ -27,6 +26,7 @@ export default {
      * @param {String} provinceName 默认省份
      * @param {Boolean} forceChangeMode 是否强制切换键盘类型（忽略当前录入车牌有效性）
      * @param {Boolean} autoComplete 是否自动完成
+     * @param {Boolean} showConfirm 是否显示确定按钮
      */
     args: {
       type: Object,
@@ -111,19 +111,17 @@ export default {
     getNumberType() {
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
-      } else {
-        return engine.NUM_TYPES.AUTO_DETECT;
       }
+      return engine.NUM_TYPES.AUTO_DETECT;
     },
     dyDisplayMode() {
       // 用于显示的车牌类型
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
-      } else {
-        return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY
-          ? engine.NUM_TYPES.NEW_ENERGY
-          : engine.NUM_TYPES.AUTO_DETECT;
       }
+      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY ?
+        engine.NUM_TYPES.NEW_ENERGY :
+        engine.NUM_TYPES.AUTO_DETECT;
     },
     /**
      * 预测的车牌类型
@@ -306,7 +304,7 @@ export default {
       if (originLength > 7) {
         output.push('');
       }
-      if (updateNumber != undefined && updateNumber.length != 0) {
+      if (updateNumber !== undefined && updateNumber.length !== 0) {
         let size = Math.min(8, updateNumber.length);
         for (let i = 0; i < size; i++) {
           output[i] = updateNumber.charAt(i);
@@ -342,21 +340,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-/* 键盘框的高度，占比为 80% */
-div.divider {
-  height: 3%;
-}
-div.keyboard-pad {
-  height: 77%;
-}
-div.mixed-keyboard-box {
-  height: auto;
-  div.input-widget {
-    height: 3rem;
-  }
+<style lang="scss">
+.mixed-keyboard-box {
   .single-keyboard-box {
-    margin-top: 0.5rem;
+    position: absolute;
+    bottom: 30px;
   }
 }
 </style>

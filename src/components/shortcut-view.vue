@@ -60,8 +60,8 @@ ul.shortcut-row {
   height: 20%;
   li {
     -webkit-box-flex: 0.25;
-    -webkit-flex: 0 1 -webkit-calc((100% - 20px*4) / 5);
-    flex: 0 1 calc((100% - 20px*4) / 5);
+    -webkit-flex: 0 1 -webkit-calc((100% - 20px * 4) / 5);
+    flex: 0 1 calc((100% - 20px * 4) / 5);
     height: 100%;
   }
   /*按键左右间隔为5像素*/
