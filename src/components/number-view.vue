@@ -10,7 +10,9 @@
           :selected="(index === currentIndex)">
           <button class="key"
             :style="{'line-height': numberType !== undefined ? '1' : '180%'}"
-            @click="onCellSelected(index)">{{ handleHolder(text, index, currentIndex) }}</button>
+            @click="onCellSelected(index)">
+            {{ handleHolder(text, index, currentIndex) }}
+          </button>
         </li>
       </ul>
     </div>
@@ -37,7 +39,7 @@
 
 <script>
 export default {
-  name: "number-view",
+  name: 'number-view',
   props: {
     /**
      * 号码数组
@@ -61,7 +63,7 @@ export default {
   },
   data() {
     return {
-      model: "1"
+      model: '1'
     };
   },
   mounted() {
@@ -81,24 +83,24 @@ export default {
   methods: {
     showHolder(text, index, currentIndex) {
       return (
-        index === currentIndex && (!text || text === "" || text.length === 0)
+        index === currentIndex && (!text || text === '' || text.length === 0)
       );
     },
     handleHolder(text, index, currentIndex) {
-      return this.showHolder(text, index, currentIndex) ? "|" : text;
+      return this.showHolder(text, index, currentIndex) ? '|' : text;
     },
     /**
      * 车牌显示模式切换
      */
     onModeChanged() {
-      this.$emit("modechanged");
+      this.$emit('modechanged');
     },
     /**
      * 车牌号单元格选中事件
      * @param {Number} index 选中单元格下标
      */
     onCellSelected(index) {
-      this.$emit("cellselected", index, true);
+      this.$emit('cellselected', index, true);
     }
   }
 };

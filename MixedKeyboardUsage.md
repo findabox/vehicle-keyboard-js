@@ -146,7 +146,8 @@ Vue.use(vehicleKeyboard)
 			provinceName: '', //默认省份
 			forceChangeMode: true, //是否强制切换键盘类型（忽略当前录入车牌有效性）
 			autoComplete: true, //是否自动完成
-			showConfirm: true   //是否显示确认按钮，默认位true
+			showConfirm: true,   //是否显示确认按钮，默认位true
+			position: '' //键盘展示位置，取值范围 [static: 默认, bottom: 底部]
 		},
 		callbacks: {
 			//车牌变更

@@ -56,7 +56,8 @@ export default {
         numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
         provinceName: '', //省份
         showShortCut: false, //是否显示快捷省份
-        autoComplete: true //是否自动完成
+        autoComplete: true, //是否自动完成
+        showConfirm: true //是否显示确定按钮
       },
       prevNumber: '', //缓存上次车牌
       layout: {},
