@@ -23,7 +23,8 @@
           type="radio"
           value="1"
           name="mode-switcher">
-        <span class="mode--radioInput" />普通车牌
+        <span class="mode--radioInput" />
+        <span class="mode--radioText">普通车牌</span>
       </label>
       <label class="mode--label">
         <input v-model="model"
@@ -31,7 +32,8 @@
           type="radio"
           value="2"
           name="mode-switcher">
-        <span class="mode--radioInput" />新能源车牌
+        <span class="mode--radioInput" />
+        <span class="mode--radioText">新能源车牌</span>
       </label>
     </div>
   </div>
@@ -177,7 +179,7 @@ export default {
     margin-top: 52px;
     .mode--label {
       display: inline-block;
-      color: #719aff;
+      // color: #719aff;
       font-size: 30px;
       height: 42px;
       display: inline-flex;
@@ -200,10 +202,17 @@ export default {
       margin-top: -1px;
       vertical-align: middle;
       line-height: 1;
+      color: #b2b2b2;
+    }
+    .mode--radioText {
+      color: #b2b2b2;
     }
     .mode--radio:checked + .mode--radioInput {
       background-color: rgba(113, 154, 255, 0.5);
       border: 2px solid rgba(113, 154, 255, 1);
+    }
+    .mode--radio:checked + .mode--radioInput + .mode--radioText {
+      color: #719aff;
     }
   }
 }

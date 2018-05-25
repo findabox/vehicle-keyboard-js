@@ -175,6 +175,9 @@ Vue.use(vehicleKeyboard)
 		}
 	}
 ```
+```js
+	this.$refs.keyboard.isCompleted //是否录入完成
+```
 
 #### 说明：
 

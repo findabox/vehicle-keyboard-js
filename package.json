@@ -1,7 +1,7 @@
 {
   "name": "vehicle-keyboard",
   "description": "A VEHICLE-KEYBOARD-NUMBER keyboard for vue",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "mvpleung <mvpleung@gmail.com>",
   "main": "./src/components/index.js",
   "scripts": {
@@ -20,10 +20,10 @@
   "license": "ISC",
   "homepage": "https://github.com/mvpleung/vehicle-keyboard-js/tree/v2#readme",
   "dependencies": {
-    "browser-sync": "^2.18.6",
     "vue": "^2.1.0"
   },
   "devDependencies": {
+    "browser-sync": "^2.18.6",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-preset-es2015": "^6.0.0",
