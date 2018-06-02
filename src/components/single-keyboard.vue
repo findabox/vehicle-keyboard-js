@@ -3,6 +3,7 @@
     <keyboard-view :keyboard="dyKeyboard"
       :keycount="dyKeyCount"
       :show-confirm="args.showConfirm"
+      :show-key-tips="args.showKeyTips"
       @keyclick="onClickKey"
       @moreclick="onClickShowAll" />
   </div>
@@ -23,6 +24,7 @@ export default {
      * @param {Number} numberType 用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
      * @param {Boolean} autoComplete 是否自动完成
      * @param {Boolean} showConfirm 是否显示确定按钮
+     * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
      */
     args: {
       type: Object,
@@ -57,7 +59,8 @@ export default {
         provinceName: '', //省份
         showShortCut: false, //是否显示快捷省份
         autoComplete: true, //是否自动完成
-        showConfirm: true //是否显示确定按钮
+        showConfirm: true, //是否显示确定按钮
+        showKeyTips: false //是否显示按键提示框
       },
       prevNumber: '', //缓存上次车牌
       layout: {},

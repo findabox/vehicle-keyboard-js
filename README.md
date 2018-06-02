@@ -26,6 +26,8 @@
 
 ![](keyboard.jpeg)
 
+![](keyboard-v2.png)
+
 ## 键盘输入框混合组件使用说明
 
 [键盘输入框混合组件(js文件版)](./MixedKeyboardUsage.md)

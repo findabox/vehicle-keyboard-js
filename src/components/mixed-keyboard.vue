@@ -29,6 +29,7 @@ export default {
      * @param {Boolean} forceChangeMode 是否强制切换键盘类型（忽略当前录入车牌有效性）
      * @param {Boolean} autoComplete 是否自动完成
      * @param {Boolean} showConfirm 是否显示确定按钮
+     * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
      * @param {String} position 键盘位置，取值范围 [static: 默认, bottom: 底部]
      */
     args: {
@@ -64,6 +65,7 @@ export default {
         numberType: engine.NUM_TYPES.AUTO_DETECT, // 车用户设定的车牌号码类型 0：自动探测车牌类型，5:新能源车牌
         autoComplete: true, //是否自动完成
         showConfirm: true, //是否显示确定按钮
+        showKeyTips: false, //是否显示按键提示框
         position: ''
       },
       numberArray: ['', '', '', '', '', '', ''], // 用户输入的车牌数据
@@ -124,9 +126,9 @@ export default {
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
       }
-      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY
-        ? engine.NUM_TYPES.NEW_ENERGY
-        : engine.NUM_TYPES.AUTO_DETECT;
+      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY ?
+        engine.NUM_TYPES.NEW_ENERGY :
+        engine.NUM_TYPES.AUTO_DETECT;
     },
     /**
      * 预测的车牌类型
@@ -138,15 +140,15 @@ export default {
       );
     },
     keyboardStyle() {
-      return this.$slots && this.$slots.default > 0
-        ? {}
-        : {
-            'margin-top': '25px'
-          };
+      return this.$slots && this.$slots.default > 0 ?
+        {} :
+        {
+          'margin-top': '25px'
+        };
     },
     isCompleted() {
       return this.numberArray.every(
-        num => num && num !== '' && num != null && num !== undefined
+        num => num && num !== '' && num !== null && num !== undefined
       );
     }
   },

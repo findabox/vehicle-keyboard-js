@@ -159,7 +159,7 @@ module.exports = (function() {
   };
 
   let _STR_CIVIL_PVS =
-    '京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新';
+    '京津沪晋冀蒙辽吉黑苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新';
   let _STR_ARMY_PVS = 'QVKHBSLJNGCEZ';
   let _STR_ARMY_AREA = 'ABCDEFGHJKLMNOPRSTUVXY';
   let _STR_NUM = '1234567890';
@@ -296,7 +296,7 @@ module.exports = (function() {
   // 民用键盘布局：
   Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // 京津晋冀蒙辽吉黑沪
+      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // 京津沪晋冀蒙辽吉黑
       row1: _keysOf(_STR_CIVIL_PVS.substr(9, 9)), // 苏浙皖闽赣鲁豫鄂湘
       row2: _keysOf(_STR_CIVIL_PVS.substr(18, 9)), // 粤桂琼渝川贵云藏陕
       row3: _keysOf(_STR_CIVIL_PVS.substr(27, 4) + ' ' + ' ' + _STR_DEL_OK) // 甘青宁新-+ （不够9位补齐九位）

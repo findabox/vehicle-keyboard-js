@@ -147,6 +147,7 @@ Vue.use(vehicleKeyboard)
 			forceChangeMode: true, //是否强制切换键盘类型（忽略当前录入车牌有效性）
 			autoComplete: true, //是否自动完成
 			showConfirm: true,   //是否显示确认按钮，默认位true
+			showKeyTips: false,  //是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
 			position: '' //键盘展示位置，取值范围 [static: 默认, bottom: 底部]
 		},
 		callbacks: {

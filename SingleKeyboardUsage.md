@@ -144,7 +144,8 @@ Vue.use(vehicleKeyboard)
 			provinceName: '', //默认省份
 			numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
 			autoComplete: true, //是否自动完成
-			showConfirm: true   //是否显示确认按钮，默认位true
+			showConfirm: true,   //是否显示确认按钮，默认位true
+			showKeyTips: false  //是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
 		},
 		callbacks: {
 			//车牌变更
