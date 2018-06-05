@@ -5,6 +5,7 @@
       :key="i"
       :class="('keysof-' + keycount)">
       <button tag="button"
+        ref="buttonKey"
         class="key r-border txt-key"
         :class="[ ('keycodeof-' + key.keyCode), {'disabled': (!key.enabled)}]"
         :disabled="(!key.enabled)"
@@ -61,6 +62,13 @@ export default {
   },
   created() {
     this.initKeys();
+    this.$nextTick(() => {
+      this.$refs.buttonKey.forEach(button =>
+        button.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+        })
+      );
+    });
   },
   watch: {
     keys(val) {
@@ -152,6 +160,13 @@ export default {
   /*需要设置button在所有父节点上的百分比*/
   & > li {
     height: 100%;
+    //禁止长按选择文字
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   /*按键左右间隔为5像素*/
