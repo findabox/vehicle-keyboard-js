@@ -132,6 +132,11 @@ export default {
 
 <style lang="scss">
 .vehicle-keyrow {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  vertical-align: baseline;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
