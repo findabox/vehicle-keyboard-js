@@ -1,30 +1,6 @@
 # 停车王车牌号码专用键盘 VehicleKeyboard - vue.js
 
-
-[Vue项目单组件引用请看这里](https://github.com/mvpleung/vehicle-keyboard-js/tree/v2#%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E6%A1%86%E6%B7%B7%E5%90%88%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
-
-`VehicleKeyboard`是停车王品牌的各端产品线的基础组件，专为提高中国车牌号码输入速度而定制开发的专用键盘组件，包括以下三个项目：
-
-- `Android` Android项目，为Android客户端定制包括输入组件、键盘组件及相关控制逻辑实现；
-- `iOS` iOS客户端项目，为iOS客户端定制包括输入组件、键盘组件及相关控制逻辑实现；
 - `JavaScript(Vue.js)` JavaScript(Vue.js)项目，为H5页面定制，包括Web、微信、支付宝等，同样包括输入组件、键盘组件及相关控制逻辑实现
-
-## 项目主页
-
-### Android 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-android](https://github.com/parkingwang/vehicle-keyboard-android)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-android](https://gitee.com/iRainIoT/vehicle-keyboard-android)
-
-### iOS 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-ios](https://github.com/parkingwang/vehicle-keyboard-ios)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-ios](https://gitee.com/iRainIoT/vehicle-keyboard-ios)
-
-### JavaScript Vue.js 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-js](https://github.com/parkingwang/vehicle-keyboard-js)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-js](https://gitee.com/iRainIoT/vehicle-keyboard-js)
-
-
-![](keyboard.jpeg)
 
 ![](keyboard-v2.png)
 
