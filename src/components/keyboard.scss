@@ -9,6 +9,21 @@
   text-align: center;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   height: 11.5rem;
+  
+  [role='button'],
+  input[type='button'],
+  button {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    background: none;
+    border: 0;
+    line-height: inherit;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
   .r-border {
     border-radius: 10px;
