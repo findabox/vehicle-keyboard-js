@@ -2,8 +2,8 @@
   <div class="single-keyboard-box">
     <keyboard-view :keyboard="dyKeyboard"
       :keycount="dyKeyCount"
-      :show-confirm="args.showConfirm"
-      :show-key-tips="args.showKeyTips"
+      :show-confirm="options.showConfirm"
+      :show-key-tips="options.showKeyTips"
       @keyclick="onClickKey"
       @moreclick="onClickShowAll" />
   </div>
@@ -101,7 +101,7 @@ export default {
      */
     init(args) {
       this.options = Object.assign({}, this.options, args);
-      !args.hasOwnProperty('showConfirm') && (this.args.showConfirm = true);
+      !args.hasOwnProperty('showConfirm') && (this.options.showConfirm = true);
       //showShortCut 没有传递进来时，默认通过 provinceName 来判断
       !args.hasOwnProperty('showShortCut') &&
         this.$set(
@@ -205,9 +205,9 @@ export default {
       key.FUN_OK = engine.KEY_TYPES.FUN_OK === key.keyCode; //确认
       this.currentKey = key;
       try {
-        let autoSlice = this.callbacks.onkeypressed ?
-          this.callbacks.onkeypressed(key) :
-          true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
+        let autoSlice = this.callbacks.onkeypressed
+          ? this.callbacks.onkeypressed(key)
+          : true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
         if (key.FUN_DEL) {
           if (autoSlice) {
             this.options.presetNumber = this.options.presetNumber.slice(
@@ -236,9 +236,9 @@ export default {
               this.options.presetNumber += key.text;
             }
           }
-          this.options.currentIndex === 0 ?
-            this.options.currentIndex++ :
-            this.options.currentIndex < this.layout.numberLimitLength - 1 &&
+          this.options.currentIndex === 0
+            ? this.options.currentIndex++
+            : this.options.currentIndex < this.layout.numberLimitLength - 1 &&
               this.options.currentIndex++;
         }
       } finally {
