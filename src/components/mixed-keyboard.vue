@@ -126,9 +126,9 @@ export default {
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
       }
-      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY ?
-        engine.NUM_TYPES.NEW_ENERGY :
-        engine.NUM_TYPES.AUTO_DETECT;
+      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY
+        ? engine.NUM_TYPES.NEW_ENERGY
+        : engine.NUM_TYPES.AUTO_DETECT;
     },
     /**
      * 预测的车牌类型
@@ -140,11 +140,11 @@ export default {
       );
     },
     keyboardStyle() {
-      return this.$slots && this.$slots.default > 0 ?
-        {} :
-        {
-          'margin-top': '25px'
-        };
+      return this.$slots && this.$slots.default > 0
+        ? {}
+        : {
+            'margin-top': '.78125rem'
+          };
     },
     isCompleted() {
       return this.numberArray.every(
@@ -363,7 +363,7 @@ export default {
 .mixed-keyboard-box {
   .single-keyboard-box.bottom {
     position: absolute;
-    bottom: 30px;
+    bottom: 0.9375rem;
   }
 }
 </style>

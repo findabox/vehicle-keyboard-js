@@ -120,7 +120,7 @@ export default {
   background: none !important;
 
   .input-area {
-    height: 178px;
+    height: 5.5625rem;
     background: #ffffff;
     display: flex;
     align-items: center;
@@ -135,12 +135,12 @@ export default {
       flex-wrap: nowrap;
       list-style: none;
       padding: 0;
-      margin: 0 60px 0 60px;
-      height: 90px;
-      border: 2px solid rgba(113, 154, 255, 1);
-      border-radius: 8px;
+      margin: 0 1.875rem;
+      height: 2.8125rem;
+      border: 0.0625rem solid rgba(113, 154, 255, 1);
+      border-radius: 0.25rem;
       li {
-        height: 90px;
+        height: 2.8125rem;
         -webkit-box-flex: 1;
         -webkit-flex: 1;
         flex: 1;
@@ -152,7 +152,7 @@ export default {
             }
           }
           button {
-            font-size: 50px;
+            font-size: 1.5625rem;
             color: rgba(113, 154, 255, 1);
           }
           button.line-height-180 {
@@ -161,31 +161,31 @@ export default {
         }
         &[selected='selected'].show-holder {
           button {
-            font-size: 38px;
+            font-size: 1.1875rem;
             color: #b2b2b2;
           }
         }
         &:not(:last-child) {
-          border-right: 2px solid rgba(113, 154, 255, 1);
+          border-right: 0.0625rem solid rgba(113, 154, 255, 1);
         }
         &:last-child[selected='selected'] {
-          border-radius: 0 8px 8px 0;
+          border-radius: 0 0.25rem 0.25rem 0;
         }
       }
     }
   }
 
   .mode-switcher {
-    margin-top: 52px;
+    margin-top: 1.625rem;
     .mode--label {
       display: inline-block;
       // color: #719aff;
-      font-size: 30px;
-      height: 42px;
+      font-size: 0.9375rem;
+      height: 1.3125rem;
       display: inline-flex;
       align-items: center;
       &:first-child {
-        margin-right: 60px;
+        margin-right: 1.875rem;
       }
     }
     .mode--radio {
@@ -193,12 +193,12 @@ export default {
     }
     .mode--radioInput {
       background-color: rgba(178, 178, 178, 0.5);
-      border: 2px solid rgba(178, 178, 178, 1);
+      border: 0.0625rem solid rgba(178, 178, 178, 1);
       border-radius: 100%;
       display: inline-block;
-      width: 24px;
-      height: 24px;
-      margin-right: 10px;
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-right: 0.3125rem;
       margin-top: -1px;
       vertical-align: middle;
       line-height: 1;
@@ -209,7 +209,7 @@ export default {
     }
     .mode--radio:checked + .mode--radioInput {
       background-color: rgba(113, 154, 255, 0.5);
-      border: 2px solid rgba(113, 154, 255, 1);
+      border: 0.0625rem solid rgba(113, 154, 255, 1);
     }
     .mode--radio:checked + .mode--radioInput + .mode--radioText {
       color: #719aff;

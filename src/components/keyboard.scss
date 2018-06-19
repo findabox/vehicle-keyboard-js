@@ -9,7 +9,7 @@
   text-align: center;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   height: 11.5rem;
-  
+
   [role='button'],
   input[type='button'],
   button {
@@ -26,12 +26,12 @@
   }
 
   .r-border {
-    border-radius: 10px;
+    border-radius: 0.3125rem; /*5px*/
     /*低版本Android WebView兼容性处理*/
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-top-left-radius: 0.3125rem;
+    border-top-right-radius: 0.3125rem;
+    border-bottom-left-radius: 0.3125rem;
+    border-bottom-right-radius: 0.3125rem;
     background-color: #ffffff;
     box-sizing: border-box;
   }
@@ -39,7 +39,7 @@
   .vehicle-keyboard {
     height: 100%;
     // border: 10px solid #eef0f4;
-    padding: 15px;
+    padding: 0.46875rem;
     background-color: #e4e4e4;
   }
 
@@ -48,14 +48,14 @@
     position: absolute;
     background: white;
     margin: 0 auto;
-    width: 50px;
-    height: 60px;
-    line-height: 60px;
+    width: 1.5625rem;
+    height: 1.875rem;
+    line-height: 1.875rem;
     color: #418af9;
-    font-size: 28px;
+    font-size: 0.875rem;
     text-align: center;
     vertical-align: middle;
-    border-radius: 10px;
+    border-radius: 0.3125rem;
     border: 1px solid #cccccc;
     box-shadow: 0 1px 2px #dddddd;
   }

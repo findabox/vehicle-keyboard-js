@@ -149,17 +149,17 @@ export default {
 
   /*上下之间每行间隔*/
   &:not(:first-child) {
-    margin-top: 8px;
+    margin-top: 0.25rem;
   }
 
   &.rowsof-5 {
-    height: -webkit-calc((100% - 8px * 4)/5);
-    height: calc((100% - 8px * 4) / 5);
+    height: -webkit-calc((100% - 0.25rem * 4)/5);
+    height: calc((100% - 0.25rem * 4) / 5);
   }
 
   &.rowsof-4 {
-    height: -webkit-calc((100% - 8px * 3)/4);
-    height: calc((100% - 8px * 3) / 4);
+    height: -webkit-calc((100% - 0.25rem * 3)/4);
+    height: calc((100% - 0.25rem * 3) / 4);
   }
 
   /*需要设置button在所有父节点上的百分比*/
@@ -176,7 +176,7 @@ export default {
 
   /*按键左右间隔为5像素*/
   & > li:not(:last-child) {
-    margin-right: 10px;
+    margin-right: 0.3125rem;
   }
 
   /* 增加按键样式 */
@@ -184,43 +184,43 @@ export default {
     /*动态计算每个按键的宽度, 按每行按键个数来计算*/
     &.keysof-11 {
       -webkit-box-flex: 0.9;
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 10)/11);
-      flex: 0 1 calc((100% - 10px * 10) / 11);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 10)/11);
+      flex: 0 1 calc((100% - 0.3125rem * 10) / 11);
     }
     &.keysof-10 {
       -webkit-box-flex: 0.095;
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 9)/10);
-      flex: 0 1 calc((100% - 10px * 9) / 10);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 9)/10);
+      flex: 0 1 calc((100% - 0.3125rem * 9) / 10);
     }
     &.keysof-9 {
       -webkit-box-flex: 0.12;
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 8)/8);
-      flex: 0 1 calc((100% - 10px * 8) / 9);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 8)/8);
+      flex: 0 1 calc((100% - 0.3125rem * 8) / 9);
     }
     &.keysof-7 {
       -webkit-box-flex: 0.14;
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 6)/6);
-      flex: 0 1 calc((100% - 10px * 6) / 7);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 6)/6);
+      flex: 0 1 calc((100% - 0.3125rem * 6) / 7);
     }
   }
 
   /*在最后一行最后一个键,如果存在"确定"键,这个按键的宽度为2倍*/
   &.funcrow > li {
     &.keysof-11:last-child {
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 10)/11 * 2 + 10px);
-      flex: 0 1 calc((100% - 10px * 10) / 11 * 2 + 10px);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 10)/11 * 2 + 0.3125rem);
+      flex: 0 1 calc((100% - 0.3125rem * 10) / 11 * 2 + 0.3125rem);
     }
     &.keysof-10:last-child {
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 9)/10 * 2 + 10px);
-      flex: 0 1 calc((100% - 10px * 9) / 10 * 2 + 10px);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 9)/10 * 2 + 0.3125rem);
+      flex: 0 1 calc((100% - 0.3125rem * 9) / 10 * 2 + 0.3125rem);
     }
     &.keysof-9:last-child {
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 8)/9 * 2 + 10px);
-      flex: 0 1 calc((100% - 10px * 8) / 9 * 2 + 10px);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 8)/9 * 2 + 0.3125rem);
+      flex: 0 1 calc((100% - 0.3125rem * 8) / 9 * 2 + 0.3125rem);
     }
     &.keysof-7:last-child {
-      -webkit-flex: 0 1 -webkit-calc((100% - 10px * 6)/7 * 2 + 10px);
-      flex: 0 1 calc((100% - 10px * 6) / 7 * 2 + 10px);
+      -webkit-flex: 0 1 -webkit-calc((100% - 0.3125rem * 6)/7 * 2 + 0.3125rem);
+      flex: 0 1 calc((100% - 0.3125rem * 6) / 7 * 2 + 0.3125rem);
     }
   }
 
