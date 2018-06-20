@@ -81,8 +81,8 @@ module.exports = (function() {
     FULL: 0,
     // 民用
     CIVIL: 1,
-    // 民用+武警
-    CIVIL_WJ: 2
+    // 民用+特殊车辆
+    CIVIL_SPEC: 2
   };
 
   /**
@@ -94,7 +94,9 @@ module.exports = (function() {
     // 功能键：删除
     FUN_DEL: 1,
     // 功能键：确定
-    FUN_OK: 2
+    FUN_OK: 2,
+    // 功能键：更多
+    FUN_MORE: 3
   };
 
   /**
@@ -107,39 +109,41 @@ module.exports = (function() {
     AUTO_DETECT: 0,
     // 民用车牌
     CIVIL: 1,
-    // 武警总队
-    WUJING: 2,
-    // 武警地方
-    WUJING_LOCAL: 3,
-    // 军队车牌
-    ARMY: 4,
+    // 2007武警
+    WJ2007: 2,
+    // 2012武警
+    WJ2012: 3,
+    // 2012军队车牌
+    PLA2012: 4,
     // 新能源车牌
     NEW_ENERGY: 5,
-    // 大使馆车牌
-    EMBASSY: 6,
-    // 新大使馆车牌
-    EMBASSY_NEW: 7,
+    // 2007大使馆车牌
+    SHI2007: 6,
+    // 2017新大使馆车牌
+    SHI2017: 7,
     // 民航摆渡车
     AVIATION: 8,
 
     nameOf: function(mode) {
       switch (mode) {
+        case -1:
+          return 'UNKNOWN';
         case 0:
           return 'AUTO_DETECT';
         case 1:
           return 'CIVIL';
         case 2:
-          return 'WUJING';
+          return 'WJ2007';
         case 3:
-          return 'WUJING_LOCAL';
+          return 'WJ2012';
         case 4:
-          return 'ARMY';
+          return 'PLA2012';
         case 5:
           return 'NEW_ENERGY';
         case 6:
-          return 'EMBASSY';
+          return 'SHI2007';
         case 7:
-          return 'EMBASSY_NEW';
+          return 'SHI2017';
         case 8:
           return 'AVIATION';
         default:
@@ -149,7 +153,7 @@ module.exports = (function() {
 
     lenOf: function(mode) {
       switch (mode) {
-        case 3 /*武警地方*/:
+        case 3 /*2012武警*/:
         case 5 /*新能源*/:
           return 8;
         default:
@@ -251,18 +255,18 @@ module.exports = (function() {
     }
     let first = presetNumber.charAt(0);
     if (_in(_STR_ARMY_PVS, first)) {
-      return NUM_TYPES.ARMY;
+      return NUM_TYPES.PLA2012;
     } else if (_CHAR_EMBASSY === first) {
-      return NUM_TYPES.EMBASSY;
+      return NUM_TYPES.SHI2007;
     } else if (_CHAR_MIN === first) {
       return NUM_TYPES.AVIATION;
     } else if (_in(_STR_123, first)) {
-      return NUM_TYPES.EMBASSY_NEW;
+      return NUM_TYPES.SHI2017;
     } else if (_CHAR_W === first) {
       if (presetNumber.length >= 3 && _isProvince(presetNumber.charAt(2))) {
-        return NUM_TYPES.WUJING_LOCAL;
+        return NUM_TYPES.WJ2012;
       }
-      return NUM_TYPES.WUJING;
+      return NUM_TYPES.WJ2007;
     } else if (_isProvince(first)) {
       if (presetNumber.length === 8) {
         // 新能源车牌：
@@ -288,12 +292,8 @@ module.exports = (function() {
 
   ////// 注册布局提供器 START //////
 
-  let _LAYOUT_CIVIL = 'layout.c';
-  let _LAYOUT_WJ = 'layout.w';
-  let _LAYOUT_WJ_FULL = 'layout.w.f';
-  let _LAYOUT_FULL = 'layout.f';
-
   // 民用键盘布局：
+  let _LAYOUT_CIVIL = 'layout.c';
   Cached.reg(
     {
       row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // 京津沪晋冀蒙辽吉黑
@@ -325,15 +325,19 @@ module.exports = (function() {
     [2, 3, 4, 5, 6, 7]
   );
 
-  // 民用+武警车牌布局：
+  // 民用+特殊车牌布局：
+  let _LAYOUT_SPEC = 'layout.s';
+  let _LAYOUT_SPEC_FULL = 'layout.s.f';
   Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // "京津晋冀蒙辽吉黑沪"
+      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // "京津沪晋冀蒙辽吉黑"
       row1: _keysOf(_STR_CIVIL_PVS.substr(9, 9)), // "苏浙皖闽赣鲁豫鄂湘"
-      row2: _keysOf(_STR_CIVIL_PVS.substr(18, 8)), // "粤桂琼渝川贵云藏"
-      row3: _keysOf(_STR_CIVIL_PVS.substr(26, 5) + _CHAR_W + _STR_DEL_OK) // 陕甘青宁新W-+
+      row2: _keysOf(_STR_CIVIL_PVS.substr(18, 9)), // "粤桂琼渝川贵云藏"
+      row3: _keysOf(
+        _STR_CIVIL_PVS.substr(25, 5) + _CHAR_EMBASSY + _CHAR_W + _STR_DEL_OK
+      ) // 陕甘青宁新使W-+
     },
-    _LAYOUT_WJ,
+    _LAYOUT_SPEC,
     0
   );
   Cached.reg(
@@ -343,7 +347,7 @@ module.exports = (function() {
       row2: _keysOf(_STR_CIVIL_PVS.substr(12, 11)),
       row3: _keysOf(_STR_CIVIL_PVS.substr(22, 8) + _STR_DEL_OK)
     },
-    _LAYOUT_WJ,
+    _LAYOUT_SPEC,
     2
   );
 
@@ -354,14 +358,15 @@ module.exports = (function() {
       row2: _keysOf(_STR_CIVIL_PVS.substr(12, 10)),
       row3: _keysOf(_STR_CIVIL_PVS.substr(22, 9) + _CHAR_DEL)
     },
-    _LAYOUT_WJ_FULL,
+    _LAYOUT_SPEC_FULL,
     2
   );
 
   // 全键盘布局：
+  let _LAYOUT_FULL = 'layout.f';
   Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 10)), // "京津晋冀蒙辽吉黑沪苏"
+      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 10)), // "京津沪晋冀蒙辽吉黑苏"
       row1: _keysOf(_STR_CIVIL_PVS.substr(10, 10)), // "浙皖闽赣鲁豫鄂湘粤桂"
       row2: _keysOf(_STR_CIVIL_PVS.substr(20, 10)), // "琼渝川贵云藏陕甘青宁"
       row3: _keysOf(
@@ -402,8 +407,8 @@ module.exports = (function() {
   // 处理“民用+武警”的特殊键位2种情况:
   // 1 - 第一位键盘布局中，显示带武警字符的特殊布局:
   _GlobalConf.layoutProvider.reg(function(chain, args) {
-    if (0 === args.index && args.keyboardType === KB_TYPES.CIVIL_WJ) {
-      return Cached.load(_LAYOUT_WJ, 0);
+    if (0 === args.index && args.keyboardType === KB_TYPES.CIVIL_SPEC) {
+      return Cached.load(_LAYOUT_SPEC, 0);
     }
     return chain.next(args);
   });
@@ -413,13 +418,13 @@ module.exports = (function() {
     if (
       2 === args.index &&
       args.keyboardType !== KB_TYPES.CIVIL &&
-      (NUM_TYPES.WUJING === args.numberType ||
-        NUM_TYPES.WUJING_LOCAL === args.numberType)
+      (NUM_TYPES.WJ2007 === args.numberType ||
+        NUM_TYPES.WJ2012 === args.numberType)
     ) {
       if (args.keyboardType === KB_TYPES.FULL) {
-        return Cached.load(_LAYOUT_WJ_FULL, 2);
+        return Cached.load(_LAYOUT_SPEC_FULL, 2);
       }
-      return Cached.load(_LAYOUT_WJ, 2);
+      return Cached.load(_LAYOUT_SPEC, 2);
     }
     return chain.next(args);
   });
@@ -438,11 +443,11 @@ module.exports = (function() {
 
   let _KEY_ANY = 'keys.any';
   let _KEY_CIVIL = 'keys.civil';
-  let _KEY_ARMY = 'keys.army';
+  let _KEY_PLA2012 = 'keys.army';
   let _KEY_WJ = 'keys.wj';
   let _KEY_AVIATION = 'keys.aviation';
-  let _KEY_EMBASSY = 'keys.embassy';
-  let _KEY_EMBASSY_ZH = 'keys.embassy.zh';
+  let _KEY_SHI2007 = 'keys.embassy';
+  let _KEY_SHI2007_ZH = 'keys.embassy.zh';
   let _KEY_NUMBRICS = 'keys.num';
   let _KEY_NUMBRICS_LETTERS = 'keys.num.letters';
   let _KEY_O_POLICE = 'keys.O.police';
@@ -461,8 +466,8 @@ module.exports = (function() {
   Cached.reg(_keysOf(_STR_CHARS + _CHAR_JING), _KEY_O_POLICE);
 
   Cached.reg(_keysOf(_STR_LETTERS + _CHAR_O), _KEY_CIVIL, 1);
-  Cached.reg(_keysOf(_STR_ARMY_AREA), _KEY_ARMY, 1);
-  Cached.reg(_keysOf(_STR_123), _KEY_EMBASSY, 1);
+  Cached.reg(_keysOf(_STR_ARMY_AREA), _KEY_PLA2012, 1);
+  Cached.reg(_keysOf(_STR_123), _KEY_SHI2007, 1);
   Cached.reg(_keysOf(_CHAR_J), _KEY_WJ, 1);
   Cached.reg(_keysOf(_CHAR_HANG), _KEY_AVIATION, 1);
 
@@ -471,7 +476,7 @@ module.exports = (function() {
   Cached.reg(_keysOf(_STR_NUM + _STR_DF), _KEY_NUMERICS_DF);
   Cached.reg(_keysOf(_STR_HK_MACAO), _KEY_HK_MACAO);
   Cached.reg(_keysOf(_STR_CHARS + _STR_POSTFIX_ZH + _CHAR_XUE), _KEY_POSTFIX);
-  Cached.reg(_keysOf(_CHAR_EMBASSY), _KEY_EMBASSY_ZH);
+  Cached.reg(_keysOf(_CHAR_EMBASSY), _KEY_SHI2007_ZH);
 
   // 注册键位提供器，序号：0
   _GlobalConf.keyProvider.reg(function(chain, args) {
@@ -485,16 +490,16 @@ module.exports = (function() {
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (1 === args.index) {
       switch (args.numberType) {
-        case NUM_TYPES.ARMY:
-          return Cached.load(_KEY_ARMY, 1);
-        case NUM_TYPES.WUJING:
-        case NUM_TYPES.WUJING_LOCAL:
+        case NUM_TYPES.PLA2012:
+          return Cached.load(_KEY_PLA2012, 1);
+        case NUM_TYPES.WJ2007:
+        case NUM_TYPES.WJ2012:
           return Cached.load(_KEY_WJ, 1);
         case NUM_TYPES.AVIATION:
           return Cached.load(_KEY_AVIATION, 1);
-        case NUM_TYPES.EMBASSY:
-          return Cached.load(_KEY_EMBASSY, 1);
-        case NUM_TYPES.EMBASSY_NEW:
+        case NUM_TYPES.SHI2007:
+          return Cached.load(_KEY_SHI2007, 1);
+        case NUM_TYPES.SHI2017:
           return Cached.load(_KEY_NUMBRICS);
         default:
           return Cached.load(_KEY_CIVIL, 1);
@@ -508,11 +513,11 @@ module.exports = (function() {
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (2 === args.index) {
       switch (args.numberType) {
-        case NUM_TYPES.WUJING:
-        case NUM_TYPES.WUJING_LOCAL:
+        case NUM_TYPES.WJ2007:
+        case NUM_TYPES.WJ2012:
           return Cached.load(_KEY_WJ, 2);
-        case NUM_TYPES.EMBASSY:
-        case NUM_TYPES.EMBASSY_NEW:
+        case NUM_TYPES.SHI2007:
+        case NUM_TYPES.SHI2017:
           return Cached.load(_KEY_NUMBRICS);
         case NUM_TYPES.NEW_ENERGY:
           return Cached.load(_KEY_NUMERICS_DF);
@@ -526,7 +531,7 @@ module.exports = (function() {
 
   // 注册键位提供器，序号：3
   _GlobalConf.keyProvider.reg(function(chain, args) {
-    if (3 === args.index && NUM_TYPES.EMBASSY === args.numberType) {
+    if (3 === args.index && NUM_TYPES.SHI2007 === args.numberType) {
       return Cached.load(_KEY_NUMBRICS);
     }
     return chain.next(args);
@@ -550,14 +555,14 @@ module.exports = (function() {
       switch (args.numberType) {
         case NUM_TYPES.NEW_ENERGY:
           return Cached.load(_KEY_NUMBRICS);
-        case NUM_TYPES.ARMY:
-        case NUM_TYPES.EMBASSY:
-        case NUM_TYPES.WUJING:
+        case NUM_TYPES.PLA2012:
+        case NUM_TYPES.SHI2007:
+        case NUM_TYPES.WJ2007:
         case NUM_TYPES.AVIATION:
-        case NUM_TYPES.WUJING_LOCAL:
+        case NUM_TYPES.WJ2012:
           return Cached.load(_KEY_NUMBRICS_LETTERS);
-        case NUM_TYPES.EMBASSY_NEW:
-          return Cached.load(_KEY_EMBASSY_ZH);
+        case NUM_TYPES.SHI2017:
+          return Cached.load(_KEY_SHI2007_ZH);
         default:
           let cityCode = args.number.charAt(1);
           // “粤O” 之类的警车号牌
@@ -709,7 +714,7 @@ module.exports = (function() {
     if (
       keyboardType === undefined ||
       keyboardType < KB_TYPES.FULL ||
-      keyboardType > KB_TYPES.CIVIL_WJ
+      keyboardType > KB_TYPES.CIVIL_SPEC
     ) {
       throw new RangeError(
         '参数(keyboardType)范围必须在[0, 2]之间，当前: ' + keyboardType

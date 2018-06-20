@@ -139,7 +139,7 @@ Vue.use(vehicleKeyboard)
 	data() {
 		args: {
 			presetNumber: '', //预设车牌号码。可以是空车牌号码或者完整车牌。注意：参数不可为空，当空车牌时，设置空字符串**
-			keyboardType: 1,  //键盘类型[0:全键盘，1：民用, 2：民用+武警]
+			keyboardType: 1,  //键盘类型[0:全键盘，1：民用, 2：民用+特殊车辆]
 			currentIndex: 0,  //当前输入位置
 			provinceName: '', //默认省份
 			numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
