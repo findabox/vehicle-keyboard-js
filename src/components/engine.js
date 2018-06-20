@@ -1,404 +1,139 @@
-module.exports = (function() {
+(function(global, factory) {
+  module.exports = factory();
+})(this, function() {
   'use strict';
 
-  //////
+  // 定义键盘引擎内部键盘响应逻辑
+  // Author: 陈哈哈 yoojiachen@gmail.com
 
-  let Chain = {
-    create: function(defVal) {
-      let chain = {};
-      let _handlers = new Array();
-      let _index = 0;
-
-      chain.next = function(args) {
-        if (_index <= _handlers.length) {
-          return _handlers[_index++](chain, args);
-        }
-        return defVal;
-      };
-
-      chain.process = function(args) {
-        let ret = chain.next(args);
-        _index = 0;
-        return ret;
-      };
-
-      chain.reg = function(h) {
-        _handlers.push(h);
-        return chain;
-      };
-
-      return chain;
-    }
-  };
-
-  let Each = {
-    create: function() {
-      let _convertor = {};
-      let _workers = new Array();
-
-      _convertor.process = function(defVal, args) {
-        let ret = defVal;
-        _workers.forEach(function(worker) {
-          ret = worker(ret, args);
-        });
-        return ret;
-      };
-
-      _convertor.reg = function(p) {
-        _workers.push(p);
-        return _convertor;
-      };
-
-      return _convertor;
-    }
-  };
-
-  let Cached = {
-    _mcached: {},
-
-    reg: function(layout, category, keys) {
-      if (keys !== undefined && keys.constructor === Array) {
-        let cached = this._mcached;
-        keys.forEach(function(key) {
-          cached[category + ':' + key] = layout;
-        });
-      } else {
-        let keyIdx = keys === undefined ? 0 : keys;
-        this._mcached[category + ':' + keyIdx] = layout;
-      }
-    },
-
-    load: function(category, key) {
-      return this._mcached[category + ':' + (key === undefined ? 0 : key)];
-    }
-  };
-
-  /**
-   * 键盘类型
-   */
-  let KB_TYPES = {
-    // 全键盘
-    FULL: 0,
-    // 民用
-    CIVIL: 1,
-    // 民用+特殊车辆
-    CIVIL_SPEC: 2
-  };
-
-  /**
-   * 键位功能类型
-   */
-  let KEY_TYPES = {
-    // 普通按键
-    GENERAL: 0,
-    // 功能键：删除
-    FUN_DEL: 1,
-    // 功能键：确定
-    FUN_OK: 2,
-    // 功能键：更多
-    FUN_MORE: 3
-  };
-
-  /**
-   * 车牌号码类型
-   */
-  let NUM_TYPES = {
-    // 未知类型
-    UNKNOWN: -1,
-    // 自动探测试
-    AUTO_DETECT: 0,
-    // 民用车牌
-    CIVIL: 1,
-    // 2007武警
-    WJ2007: 2,
-    // 2012武警
-    WJ2012: 3,
-    // 2012军队车牌
-    PLA2012: 4,
-    // 新能源车牌
-    NEW_ENERGY: 5,
-    // 2007大使馆车牌
-    SHI2007: 6,
-    // 2017新大使馆车牌
-    SHI2017: 7,
-    // 民航摆渡车
-    AVIATION: 8,
-
-    nameOf: function(mode) {
-      switch (mode) {
-        case -1:
-          return 'UNKNOWN';
-        case 0:
-          return 'AUTO_DETECT';
-        case 1:
-          return 'CIVIL';
-        case 2:
-          return 'WJ2007';
-        case 3:
-          return 'WJ2012';
-        case 4:
-          return 'PLA2012';
-        case 5:
-          return 'NEW_ENERGY';
-        case 6:
-          return 'SHI2007';
-        case 7:
-          return 'SHI2017';
-        case 8:
-          return 'AVIATION';
-        default:
-          return 'UNKNOWN';
-      }
-    },
-
-    lenOf: function(mode) {
-      switch (mode) {
-        case 3 /*2012武警*/:
-        case 5 /*新能源*/:
-          return 8;
-        default:
-          return 7;
-      }
-    }
-  };
-
-  let _STR_CIVIL_PVS =
-    '京津沪晋冀蒙辽吉黑苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新';
-  let _STR_ARMY_PVS = 'QVKHBSLJNGCEZ';
-  let _STR_ARMY_AREA = 'ABCDEFGHJKLMNOPRSTUVXY';
-  let _STR_NUM = '1234567890';
-  let _STR_LETTERS = 'QWERTYUPASDFGHJKLZXCVBNM';
-  let _STR_CHARS = _STR_NUM + _STR_LETTERS;
-  let _CHAR_EMBASSY = '使';
-  let _CHAR_HK = '港';
-  let _CHAR_MACAO = '澳';
-  let _CHAR_XUE = '学';
-  let _CHAR_JING = '警';
-  let _CHAR_MIN = '民';
-  let _CHAR_HANG = '航';
-  let _STR_POSTFIX_ZH = _CHAR_JING + '挂领试超';
-  let _CHAR_W = 'W';
-  let _CHAR_J = 'J';
-  let _CHAR_O = 'O';
-  let _STR_DF = 'DF';
-  let _STR_123 = '123';
-  let _STR_Q_IOP = 'QWERTYUIOP';
-  let _STR_Q_OP = 'QWERTYUOP';
-  let _STR_Q_P = 'QWERTYUP';
-  let _STR_A_L = 'ASDFGHJKL';
-  let _STR_Z_M = 'ZXCVBNM';
-  let _STR_HK_MACAO = _CHAR_HK + _CHAR_MACAO;
-  let _STR_EMBASSY_PVS = _CHAR_EMBASSY + _STR_123;
-  let _CHAR_DEL = '-';
-  let _STR_DEL_OK = _CHAR_DEL + '+';
-
-  /////////
-
-  /**
-   * 构建一个KeyEntity
-   * @param {*text} 键位文本
-   * @param {*keyCode} 按键码
-   * @param {*enabled} 是否启用状态
-   */
-  function _keyOf(text, keyCode, enabled) {
-    return {
-      text: text, // 键位文字
-      keyCode: keyCode === undefined ? KEY_TYPES.GENERAL : keyCode, // 键位功能类型代码，默认：普通键位
-      enabled: enabled === undefined ? true : enabled, // 是否可用，默认：启用
-      isFunKey: keyCode === undefined ? false : keyCode !== KEY_TYPES.GENERAL // 是否为功能键
-    };
-  }
-
-  /**
-   * 修改和创建一个新的KeyEntity，指定是否启用状态。
-   * @param {*entity} 原KeyEntity
-   * @param {*enabled} 是否启用状态
-   */
-  function _keyOfEnabled(entity, enabled) {
-    return _keyOf(
-      entity.text,
-      entity.keyCode,
-      enabled // 修改
-    );
-  }
-
-  /** 将字符串转换成KeyEntity */
-  function _keysOf(str) {
-    let output = new Array();
-    for (let i = 0; i < str.length; i++) {
-      output.push(_keyOf(str[i]));
-    }
-    return output;
-  }
-
-  /** 修改和创建一个新的KeyEntity，指定功能键盘参数 */
-  function _keyOfCode(entity, text, keyCode) {
-    return _keyOf(
-      text,
-      keyCode, // 修改
-      entity.enabled
-    );
-  }
-
-  function _in(src, item) {
-    return src.indexOf(item) >= 0;
-  }
-
-  function _isProvince(str) {
-    return _in(_STR_CIVIL_PVS, str);
-  }
-
-  /** 探测车牌号码的模式 */
-  function detectNumberTypeOf(presetNumber) {
-    if (presetNumber.length === 0) {
-      return NUM_TYPES.AUTO_DETECT;
-    }
-    let first = presetNumber.charAt(0);
-    if (_in(_STR_ARMY_PVS, first)) {
-      return NUM_TYPES.PLA2012;
-    } else if (_CHAR_EMBASSY === first) {
-      return NUM_TYPES.SHI2007;
-    } else if (_CHAR_MIN === first) {
-      return NUM_TYPES.AVIATION;
-    } else if (_in(_STR_123, first)) {
-      return NUM_TYPES.SHI2017;
-    } else if (_CHAR_W === first) {
-      if (presetNumber.length >= 3 && _isProvince(presetNumber.charAt(2))) {
-        return NUM_TYPES.WJ2012;
-      }
-      return NUM_TYPES.WJ2007;
-    } else if (_isProvince(first)) {
-      if (presetNumber.length === 8) {
-        // 新能源车牌：
-        if (/\W[A-Z][0-9DF][0-9A-Z]\d{3}[0-9DF]/.test(presetNumber)) {
-          return NUM_TYPES.NEW_ENERGY;
-        }
-        return NUM_TYPES.UNKNOWN;
-      }
-      return NUM_TYPES.CIVIL;
-    }
-    return NUM_TYPES.UNKNOWN;
-  }
+  var frm = require('./frm.js');
+  var def = require('./define.js');
+  var hlp = require('./helper');
 
   /** 全局配置 */
-  let _GlobalConf = {
+  var _GlobalConf = {
     // 键位提供器
-    keyProvider: Chain.create({}),
+    keyProvider: frm.Chain.create({}),
     // 布局提供器
-    layoutProvider: Chain.create({}),
+    layoutProvider: frm.Chain.create({}),
     // 布局混合
-    mixiner: Each.create()
+    mixiner: frm.Each.create()
   };
 
   ////// 注册布局提供器 START //////
 
   // 民用键盘布局：
-  let _LAYOUT_CIVIL = 'layout.c';
-  Cached.reg(
+  var _LAYOUT_CIVIL = 'layout.c';
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // 京津沪晋冀蒙辽吉黑
-      row1: _keysOf(_STR_CIVIL_PVS.substr(9, 9)), // 苏浙皖闽赣鲁豫鄂湘
-      row2: _keysOf(_STR_CIVIL_PVS.substr(18, 9)), // 粤桂琼渝川贵云藏陕
-      row3: _keysOf(_STR_CIVIL_PVS.substr(27, 4) + ' ' + ' ' + _STR_DEL_OK) // 甘青宁新-+ （不够9位补齐九位）
+      row0: hlp.keysOf(def.S_CIVIL_PVS.substr(0, 9)), // 京津沪晋冀蒙辽吉黑
+      row1: hlp.keysOf(def.S_CIVIL_PVS.substr(9, 8)), // 苏浙皖闽赣鲁豫鄂
+      row2: hlp.keysOf(def.S_CIVIL_PVS.substr(17, 8)), // 湘粤桂琼渝川贵云
+      row3: hlp.keysOf(def.S_CIVIL_PVS.substr(25, 6) + def.S_DEL_OK) // 藏陕甘青宁新-+
     },
     _LAYOUT_CIVIL,
     0
   );
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM),
-      row1: _keysOf(_STR_Q_OP + _CHAR_MACAO),
-      row2: _keysOf(_STR_A_L + _CHAR_HK),
-      row3: _keysOf(_STR_Z_M + _STR_DEL_OK)
+      row0: hlp.keysOf(def.S_NUM),
+      row1: hlp.keysOf(def.S_Q_OP + def.C_MACAO),
+      row2: hlp.keysOf(def.S_A_L + def.C_HK),
+      row3: hlp.keysOf(def.S_Z_M + def.S_DEL_OK)
     },
     _LAYOUT_CIVIL,
     1
   );
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM),
-      row1: _keysOf(_STR_Q_P + _STR_HK_MACAO),
-      row2: _keysOf(_STR_A_L + _CHAR_XUE),
-      row3: _keysOf(_STR_Z_M + _STR_DEL_OK)
+      row0: hlp.keysOf(def.S_NUM),
+      row1: hlp.keysOf(def.S_Q_P + def.S_HK_MACAO),
+      row2: hlp.keysOf(def.S_A_L + def.C_XUE),
+      row3: hlp.keysOf(def.S_Z_M + def.S_DEL_OK)
     },
     _LAYOUT_CIVIL,
     [2, 3, 4, 5, 6, 7]
   );
 
   // 民用+特殊车牌布局：
-  let _LAYOUT_SPEC = 'layout.s';
-  let _LAYOUT_SPEC_FULL = 'layout.s.f';
-  Cached.reg(
+  var _LAYOUT_SPEC = 'layout.s';
+  var _LAYOUT_SPEC_FULL = 'layout.s.f';
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 9)), // "京津沪晋冀蒙辽吉黑"
-      row1: _keysOf(_STR_CIVIL_PVS.substr(9, 9)), // "苏浙皖闽赣鲁豫鄂湘"
-      row2: _keysOf(_STR_CIVIL_PVS.substr(18, 9)), // "粤桂琼渝川贵云藏"
-      row3: _keysOf(
-        _STR_CIVIL_PVS.substr(25, 5) + _CHAR_EMBASSY + _CHAR_W + _STR_DEL_OK
+      row0: hlp.keysOf(def.S_CIVIL_PVS.substr(0, 9)), // "京津沪晋冀蒙辽吉黑"
+      row1: hlp.keysOf(def.S_CIVIL_PVS.substr(9, 9)), // "苏浙皖闽赣鲁豫鄂湘"
+      row2: hlp.keysOf(def.S_CIVIL_PVS.substr(18, 9)), // "粤桂琼渝川贵云藏"
+      row3: hlp.keysOf(
+        def.S_CIVIL_PVS.substr(25, 5) + def.C_SHI2007 + def.C_W + def.S_DEL_OK
       ) // 陕甘青宁新使W-+
     },
     _LAYOUT_SPEC,
     0
   );
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM + _STR_CIVIL_PVS.substr(0, 1)),
-      row1: _keysOf(_STR_CIVIL_PVS.substr(1, 11)),
-      row2: _keysOf(_STR_CIVIL_PVS.substr(12, 11)),
-      row3: _keysOf(_STR_CIVIL_PVS.substr(22, 8) + _STR_DEL_OK)
+      row0: hlp.keysOf(def.S_NUM + def.S_CIVIL_PVS.substr(0, 1)),
+      row1: hlp.keysOf(def.S_CIVIL_PVS.substr(1, 11)),
+      row2: hlp.keysOf(def.S_CIVIL_PVS.substr(12, 11)),
+      row3: hlp.keysOf(def.S_CIVIL_PVS.substr(22, 8) + def.S_DEL_OK)
     },
     _LAYOUT_SPEC,
     2
   );
 
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM + _STR_CIVIL_PVS.substr(0, 1)),
-      row1: _keysOf(_STR_CIVIL_PVS.substr(1, 11)),
-      row2: _keysOf(_STR_CIVIL_PVS.substr(12, 10)),
-      row3: _keysOf(_STR_CIVIL_PVS.substr(22, 9) + _CHAR_DEL)
+      row0: hlp.keysOf(def.S_NUM + def.S_CIVIL_PVS.substr(0, 1)),
+      row1: hlp.keysOf(def.S_CIVIL_PVS.substr(1, 11)),
+      row2: hlp.keysOf(def.S_CIVIL_PVS.substr(12, 10)),
+      row3: hlp.keysOf(def.S_CIVIL_PVS.substr(22, 9) + def.C_DEL)
     },
     _LAYOUT_SPEC_FULL,
     2
   );
 
   // 全键盘布局：
-  let _LAYOUT_FULL = 'layout.f';
-  Cached.reg(
+  var _LAYOUT_FULL = 'layout.f';
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_CIVIL_PVS.substr(0, 10)), // "京津沪晋冀蒙辽吉黑苏"
-      row1: _keysOf(_STR_CIVIL_PVS.substr(10, 10)), // "浙皖闽赣鲁豫鄂湘粤桂"
-      row2: _keysOf(_STR_CIVIL_PVS.substr(20, 10)), // "琼渝川贵云藏陕甘青宁"
-      row3: _keysOf(
-        _STR_CIVIL_PVS.substr(30, 1) +
-          _CHAR_MIN +
-          _STR_EMBASSY_PVS +
-          _CHAR_W +
-          _STR_ARMY_PVS.substr(0, 4)
-      ), // 新民使123WQVKH
-      row4: _keysOf(_STR_ARMY_PVS.substr(4, 9) + _CHAR_DEL)
+      row0: hlp.keysOf(def.S_CIVIL_PVS.substr(0, 10)), // "京津晋冀蒙辽吉黑沪苏"
+      row1: hlp.keysOf(def.S_CIVIL_PVS.substr(10, 10)), // "浙皖闽赣鲁豫鄂湘粤桂"
+      row2: hlp.keysOf(def.S_CIVIL_PVS.substr(20, 10)), // "琼渝川贵云藏陕甘青宁"
+      row3: hlp.keysOf(
+        // 新民使123WQVKH
+        def.S_CIVIL_PVS.substr(30, 1) +
+          def.C_MIN +
+          def.S_SHI2007_PVS +
+          def.C_W +
+          def.S_PLA2012_PVS.substr(0, 4)
+      ),
+      row4: hlp.keysOf(def.S_PLA2012_PVS.substr(4, 9) + def.S_DEL_OK)
     },
     _LAYOUT_FULL,
     0
   );
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM),
-      row1: _keysOf(_STR_Q_IOP),
-      row2: _keysOf(_STR_A_L),
-      row3: _keysOf(_STR_Z_M + _CHAR_XUE + _CHAR_HANG),
-      row4: _keysOf(_STR_HK_MACAO + _STR_POSTFIX_ZH + _CHAR_EMBASSY + _CHAR_DEL)
+      row0: hlp.keysOf(def.S_NUM),
+      row1: hlp.keysOf(def.S_Q_IOP),
+      row2: hlp.keysOf(def.S_A_L),
+      row3: hlp.keysOf(def.S_Z_M + def.C_XUE + def.C_HANG),
+      row4: hlp.keysOf(
+        def.S_HK_MACAO + def.S_POSTFIX_ZH + def.C_SHI2007 + def.S_DEL_OK
+      )
     },
     _LAYOUT_FULL,
     1
   );
-  Cached.reg(
+  frm.Cached.reg(
     {
-      row0: _keysOf(_STR_NUM),
-      row1: _keysOf(_STR_Q_IOP),
-      row2: _keysOf(_STR_A_L),
-      row3: _keysOf(_STR_Z_M + _CHAR_XUE),
-      row4: _keysOf(_STR_HK_MACAO + _STR_POSTFIX_ZH + _CHAR_EMBASSY + _CHAR_DEL)
+      row0: hlp.keysOf(def.S_NUM),
+      row1: hlp.keysOf(def.S_Q_IOP),
+      row2: hlp.keysOf(def.S_A_L),
+      row3: hlp.keysOf(def.S_Z_M + def.C_XUE),
+      row4: hlp.keysOf(
+        def.S_HK_MACAO + def.S_POSTFIX_ZH + def.C_SHI2007 + def.S_DEL_OK
+      )
     },
     _LAYOUT_FULL,
     [2, 3, 4, 5, 6, 7]
@@ -407,8 +142,8 @@ module.exports = (function() {
   // 处理“民用+武警”的特殊键位2种情况:
   // 1 - 第一位键盘布局中，显示带武警字符的特殊布局:
   _GlobalConf.layoutProvider.reg(function(chain, args) {
-    if (0 === args.index && args.keyboardType === KB_TYPES.CIVIL_SPEC) {
-      return Cached.load(_LAYOUT_SPEC, 0);
+    if (0 === args.index && args.keyboardType === def.KB_TYPES.CIVIL_SPEC) {
+      return frm.Cached.load(_LAYOUT_SPEC, 0);
     }
     return chain.next(args);
   });
@@ -417,189 +152,196 @@ module.exports = (function() {
   _GlobalConf.layoutProvider.reg(function(chain, args) {
     if (
       2 === args.index &&
-      args.keyboardType !== KB_TYPES.CIVIL &&
-      (NUM_TYPES.WJ2007 === args.numberType ||
-        NUM_TYPES.WJ2012 === args.numberType)
+      args.keyboardType !== def.KB_TYPES.CIVIL &&
+      (def.NUM_TYPES.WJ2007 === args.numberType ||
+        def.NUM_TYPES.WJ2012 === args.numberType)
     ) {
-      if (args.keyboardType === KB_TYPES.FULL) {
-        return Cached.load(_LAYOUT_SPEC_FULL, 2);
+      if (args.keyboardType === def.KB_TYPES.FULL) {
+        return frm.Cached.load(_LAYOUT_SPEC_FULL, 2);
       }
-      return Cached.load(_LAYOUT_SPEC, 2);
+      return frm.Cached.load(_LAYOUT_SPEC, 2);
     }
     return chain.next(args);
   });
 
   // 其它注册布局提供器
   _GlobalConf.layoutProvider.reg(function(chain, args) {
-    if (args.keyboardType === KB_TYPES.FULL) {
-      return Cached.load(_LAYOUT_FULL, args.index);
+    if (args.keyboardType === def.KB_TYPES.FULL) {
+      return frm.Cached.load(_LAYOUT_FULL, args.index);
     }
-    return Cached.load(_LAYOUT_CIVIL, args.index);
+    return frm.Cached.load(_LAYOUT_CIVIL, args.index);
   });
 
   ////// 注册布局提供器 END //////
 
   ////// 可用键位提供器 START //////
 
-  let _KEY_ANY = 'keys.any';
-  let _KEY_CIVIL = 'keys.civil';
-  let _KEY_PLA2012 = 'keys.army';
-  let _KEY_WJ = 'keys.wj';
-  let _KEY_AVIATION = 'keys.aviation';
-  let _KEY_SHI2007 = 'keys.embassy';
-  let _KEY_SHI2007_ZH = 'keys.embassy.zh';
-  let _KEY_NUMBRICS = 'keys.num';
-  let _KEY_NUMBRICS_LETTERS = 'keys.num.letters';
-  let _KEY_O_POLICE = 'keys.O.police';
-  let _KEY_NUMERICS_DF = 'keys.num.df';
-  let _KEY_HK_MACAO = 'keys.hk.macao';
-  let _KEY_POSTFIX = 'keys.postfix';
+  var _KEY_ANY = 'keys.any';
+  var _KEY_CIVIL = 'keys.civil';
+  var _KEY_PLA2012 = 'keys.army';
+  var _KEY_WJ = 'keys.wj';
+  var _KEY_AVIATION = 'keys.aviation';
+  var _KEY_SHI2007 = 'keys.embassy';
+  var _KEY_SHI2007_ZH = 'keys.embassy.zh';
+  var _KEY_NUMBRICS = 'keys.num';
+  var _KEY_NUMBRICS_LETTERS = 'keys.num.letters';
+  var _KEY_O_POLICE = 'keys.O.police';
+  var _KEY_NUMERICS_DF = 'keys.num.df';
+  var _KEY_HK_MACAO = 'keys.hk.macao';
+  var _KEY_POSTFIX = 'keys.postfix';
 
-  Cached.reg(
-    _keysOf(
-      _STR_CIVIL_PVS + _STR_EMBASSY_PVS + _CHAR_W + _STR_ARMY_PVS + _CHAR_MIN
+  frm.Cached.reg(
+    hlp.keysOf(
+      def.S_CIVIL_PVS +
+        def.S_SHI2007_PVS +
+        def.C_W +
+        def.S_PLA2012_PVS +
+        def.C_MIN
     ),
     _KEY_ANY
   );
-  Cached.reg(_keysOf(_STR_NUM), _KEY_NUMBRICS);
-  Cached.reg(_keysOf(_STR_CHARS), _KEY_NUMBRICS_LETTERS);
-  Cached.reg(_keysOf(_STR_CHARS + _CHAR_JING), _KEY_O_POLICE);
+  frm.Cached.reg(hlp.keysOf(def.S_NUM), _KEY_NUMBRICS);
+  frm.Cached.reg(hlp.keysOf(def.S_CHARS), _KEY_NUMBRICS_LETTERS);
+  frm.Cached.reg(hlp.keysOf(def.S_CHARS + def.C_JING), _KEY_O_POLICE);
 
-  Cached.reg(_keysOf(_STR_LETTERS + _CHAR_O), _KEY_CIVIL, 1);
-  Cached.reg(_keysOf(_STR_ARMY_AREA), _KEY_PLA2012, 1);
-  Cached.reg(_keysOf(_STR_123), _KEY_SHI2007, 1);
-  Cached.reg(_keysOf(_CHAR_J), _KEY_WJ, 1);
-  Cached.reg(_keysOf(_CHAR_HANG), _KEY_AVIATION, 1);
+  frm.Cached.reg(hlp.keysOf(def.S_LETTERS + def.C_O), _KEY_CIVIL, 1);
+  frm.Cached.reg(hlp.keysOf(def.S_PLA2012_AREA), _KEY_PLA2012, 1);
+  frm.Cached.reg(hlp.keysOf(def.S_123), _KEY_SHI2007, 1);
+  frm.Cached.reg(hlp.keysOf(def.C_J), _KEY_WJ, 1);
+  frm.Cached.reg(hlp.keysOf(def.C_HANG), _KEY_AVIATION, 1);
 
-  Cached.reg(_keysOf(_STR_NUM + _STR_CIVIL_PVS), _KEY_WJ, 2);
+  frm.Cached.reg(hlp.keysOf(def.S_NUM + def.S_CIVIL_PVS), _KEY_WJ, 2);
 
-  Cached.reg(_keysOf(_STR_NUM + _STR_DF), _KEY_NUMERICS_DF);
-  Cached.reg(_keysOf(_STR_HK_MACAO), _KEY_HK_MACAO);
-  Cached.reg(_keysOf(_STR_CHARS + _STR_POSTFIX_ZH + _CHAR_XUE), _KEY_POSTFIX);
-  Cached.reg(_keysOf(_CHAR_EMBASSY), _KEY_SHI2007_ZH);
+  frm.Cached.reg(hlp.keysOf(def.S_NUM + def.S_DF), _KEY_NUMERICS_DF);
+  frm.Cached.reg(hlp.keysOf(def.S_HK_MACAO), _KEY_HK_MACAO);
+  frm.Cached.reg(
+    hlp.keysOf(def.S_CHARS + def.S_POSTFIX_ZH + def.C_XUE),
+    _KEY_POSTFIX
+  );
+  frm.Cached.reg(hlp.keysOf(def.C_SHI2007), _KEY_SHI2007_ZH);
 
-  // 注册键位提供器，序号：0
+  // 键位提供器，Index：0
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (0 === args.index) {
-      return Cached.load(_KEY_ANY);
+      return frm.Cached.load(_KEY_ANY);
     }
     return chain.next(args);
   });
 
-  // 注册键位提供器，序号：1
+  // 键位提供器，Index：1
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (1 === args.index) {
       switch (args.numberType) {
-        case NUM_TYPES.PLA2012:
-          return Cached.load(_KEY_PLA2012, 1);
-        case NUM_TYPES.WJ2007:
-        case NUM_TYPES.WJ2012:
-          return Cached.load(_KEY_WJ, 1);
-        case NUM_TYPES.AVIATION:
-          return Cached.load(_KEY_AVIATION, 1);
-        case NUM_TYPES.SHI2007:
-          return Cached.load(_KEY_SHI2007, 1);
-        case NUM_TYPES.SHI2017:
-          return Cached.load(_KEY_NUMBRICS);
+        case def.NUM_TYPES.PLA2012:
+          return frm.Cached.load(_KEY_PLA2012, 1);
+        case def.NUM_TYPES.WJ2007:
+        case def.NUM_TYPES.WJ2012:
+          return frm.Cached.load(_KEY_WJ, 1);
+        case def.NUM_TYPES.AVIATION:
+          return frm.Cached.load(_KEY_AVIATION, 1);
+        case def.NUM_TYPES.SHI2007:
+          return frm.Cached.load(_KEY_SHI2007, 1);
+        case def.NUM_TYPES.SHI2017:
+          return frm.Cached.load(_KEY_NUMBRICS);
         default:
-          return Cached.load(_KEY_CIVIL, 1);
+          return frm.Cached.load(_KEY_CIVIL, 1);
       }
     } else {
       return chain.next(args);
     }
   });
 
-  // 注册键位提供器，序号：2
+  // 键位提供器，Index：2
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (2 === args.index) {
       switch (args.numberType) {
-        case NUM_TYPES.WJ2007:
-        case NUM_TYPES.WJ2012:
-          return Cached.load(_KEY_WJ, 2);
-        case NUM_TYPES.SHI2007:
-        case NUM_TYPES.SHI2017:
-          return Cached.load(_KEY_NUMBRICS);
-        case NUM_TYPES.NEW_ENERGY:
-          return Cached.load(_KEY_NUMERICS_DF);
+        case def.NUM_TYPES.WJ2007:
+        case def.NUM_TYPES.WJ2012:
+          return frm.Cached.load(_KEY_WJ, 2);
+        case def.NUM_TYPES.SHI2007:
+        case def.NUM_TYPES.SHI2017:
+          return frm.Cached.load(_KEY_NUMBRICS);
+        case def.NUM_TYPES.NEW_ENERGY:
+          return frm.Cached.load(_KEY_NUMERICS_DF);
         default:
-          return Cached.load(_KEY_NUMBRICS_LETTERS);
+          return frm.Cached.load(_KEY_NUMBRICS_LETTERS);
       }
     } else {
       return chain.next(args);
     }
   });
 
-  // 注册键位提供器，序号：3
+  // 键位提供器，Index：3
   _GlobalConf.keyProvider.reg(function(chain, args) {
-    if (3 === args.index && NUM_TYPES.SHI2007 === args.numberType) {
-      return Cached.load(_KEY_NUMBRICS);
+    if (3 === args.index && def.NUM_TYPES.SHI2007 === args.numberType) {
+      return frm.Cached.load(_KEY_NUMBRICS);
     }
     return chain.next(args);
   });
 
-  // 注册键位提供器，序号：4
+  // 键位提供器，Index：4
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (
       (4 === args.index || 5 === args.index) &&
-      NUM_TYPES.NEW_ENERGY === args.numberType
+      def.NUM_TYPES.NEW_ENERGY === args.numberType
     ) {
-      return Cached.load(_KEY_NUMBRICS);
+      return frm.Cached.load(_KEY_NUMBRICS);
     }
     return chain.next(args);
   });
 
-  // 注册键位提供器，序号：6
+  // 键位提供器，Index：6
   _GlobalConf.keyProvider.reg(function(chain, args) {
     if (6 === args.index) {
-      let mode = args.numberType;
+      var mode = args.numberType;
       switch (args.numberType) {
-        case NUM_TYPES.NEW_ENERGY:
-          return Cached.load(_KEY_NUMBRICS);
-        case NUM_TYPES.PLA2012:
-        case NUM_TYPES.SHI2007:
-        case NUM_TYPES.WJ2007:
-        case NUM_TYPES.AVIATION:
-        case NUM_TYPES.WJ2012:
-          return Cached.load(_KEY_NUMBRICS_LETTERS);
-        case NUM_TYPES.SHI2017:
-          return Cached.load(_KEY_SHI2007_ZH);
+        case def.NUM_TYPES.NEW_ENERGY:
+          return frm.Cached.load(_KEY_NUMBRICS);
+        case def.NUM_TYPES.PLA2012:
+        case def.NUM_TYPES.SHI2007:
+        case def.NUM_TYPES.WJ2007:
+        case def.NUM_TYPES.AVIATION:
+        case def.NUM_TYPES.WJ2012:
+          return frm.Cached.load(_KEY_NUMBRICS_LETTERS);
+        case def.NUM_TYPES.SHI2017:
+          return frm.Cached.load(_KEY_SHI2007_ZH);
         default:
-          let cityCode = args.number.charAt(1);
+          var cityCode = args.number.charAt(1);
           // “粤O” 之类的警车号牌
           if ('O' === cityCode) {
-            return Cached.load(_KEY_O_POLICE);
+            return frm.Cached.load(_KEY_O_POLICE);
           }
           // “港澳”车牌
-          let isHK_MACAO =
-            NUM_TYPES.CIVIL === mode &&
+          var isHK_MACAO =
+            def.NUM_TYPES.CIVIL === mode &&
             '粤' === args.number.charAt(0) &&
             'Z' === cityCode;
           if (isHK_MACAO) {
-            return Cached.load(_KEY_HK_MACAO);
+            return frm.Cached.load(_KEY_HK_MACAO);
           }
-          return Cached.load(_KEY_POSTFIX);
+          return frm.Cached.load(_KEY_POSTFIX);
       }
     }
     return chain.next(args);
   });
 
-  // 注册键位提供器，序号：7
+  // 键位提供器，Index：7
   _GlobalConf.keyProvider.reg(function(chain, args) {
-    if (7 === args.index && NUM_TYPES.NEW_ENERGY === args.numberType) {
-      return Cached.load(_KEY_NUMERICS_DF);
+    if (7 === args.index && def.NUM_TYPES.NEW_ENERGY === args.numberType) {
+      return frm.Cached.load(_KEY_NUMERICS_DF);
     }
     return chain.next(args);
   });
 
   // 注册键位提供器，默认
   _GlobalConf.keyProvider.reg(function() {
-    return Cached.load(_KEY_NUMBRICS_LETTERS);
+    return frm.Cached.load(_KEY_NUMBRICS_LETTERS);
   });
 
   ////// 可用键位提供器 END //////
 
   function _rowOf(obj, index) {
-    let data = obj['row' + index];
+    var data = obj['row' + index];
     return data === undefined ? [] : data;
   }
 
@@ -619,37 +361,37 @@ module.exports = (function() {
 
   // 注册键位可用性转换器
   _GlobalConf.mixiner.reg(function(layout, args) {
-    let availables = args.keys.map(function(ele) {
+    var availables = args.keys.map(function(ele) {
       return ele.text;
     });
     return _mapLayout(layout, function(entity) {
-      return _keyOfEnabled(entity, _in(availables, entity.text));
+      return hlp.keyOfEnabled(entity, hlp.contains(availables, entity.text));
     });
   });
 
   // 禁用键位: 处理新能源键盘模式下，首位不允许出现的字符
   _GlobalConf.mixiner.reg(function(layout, args) {
     return _mapLayout(layout, function(entity) {
-      let enabled = entity.enabled;
+      var enabled = entity.enabled;
       if (
         enabled &&
         args.index === 0 &&
-        layout.numberType === NUM_TYPES.NEW_ENERGY
+        layout.numberType === def.NUM_TYPES.NEW_ENERGY
       ) {
-        enabled = _isProvince(entity.text);
+        enabled = hlp.isProvince(entity.text);
       }
-      return _keyOfEnabled(entity, enabled);
+      return hlp.keyOfEnabled(entity, enabled);
     });
   });
 
-  // 功能按钮的转换处理
+  // 功能按钮“确定、删除、更多”等按键的转换处理
   _GlobalConf.mixiner.reg(function(layout) {
     return _mapLayout(layout, function(entity) {
       // 注意,KeyEntity的KeyCode还是原始状态,尚未更新,不能使用它来判断是否是功能键
       if ('-' === entity.text) {
-        return _keyOfCode(entity, '' /* ← */, KEY_TYPES.FUN_DEL);
+        return hlp.keyOfCode(entity, '' /* ← */, def.KEY_TYPES.FUN_DEL);
       } else if ('+' === entity.text) {
-        return _keyOfCode(entity, '确定', KEY_TYPES.FUN_OK);
+        return hlp.keyOfCode(entity, '确定', def.KEY_TYPES.FUN_OK);
       }
       return entity;
     });
@@ -659,8 +401,8 @@ module.exports = (function() {
   _GlobalConf.mixiner.reg(function(layout) {
     // 当输入车牌不为空时可以点击
     return _mapLayout(layout, function(entity) {
-      if (entity.keyCode === KEY_TYPES.FUN_DEL) {
-        return _keyOfEnabled(entity, layout.numberLength !== 0);
+      if (entity.keyCode === def.KEY_TYPES.FUN_DEL) {
+        return hlp.keyOfEnabled(entity, layout.numberLength !== 0);
       }
       return entity;
     });
@@ -670,8 +412,8 @@ module.exports = (function() {
   _GlobalConf.mixiner.reg(function(layout) {
     // 当输入车牌达到最后一位时可以点击
     return _mapLayout(layout, function(entity) {
-      if (entity.keyCode === KEY_TYPES.FUN_OK) {
-        return _keyOfEnabled(
+      if (entity.keyCode === def.KEY_TYPES.FUN_OK) {
+        return hlp.keyOfEnabled(
           entity,
           layout.numberLength === layout.numberLimitLength
         );
@@ -693,8 +435,8 @@ module.exports = (function() {
   ////////
 
   function __clone(srcObj) {
-    let newCopy = srcObj.constructor();
-    for (let prop in srcObj) {
+    var newCopy = srcObj.constructor();
+    for (var prop in srcObj) {
       if (srcObj.hasOwnProperty(prop)) {
         newCopy[prop] = srcObj[prop];
       }
@@ -703,18 +445,23 @@ module.exports = (function() {
   }
 
   /**
-   * @param {* keyboardType} 键盘类型 1，表示: 民用键盘
-   * @param {* currentIndex} 当前键位序号
+   * 键盘引擎的逻辑设计说明：
+   * 1. 由“键盘布局管理器”根据传入的键盘类型，返回对应的键盘布局。例如：民用键盘只显示省份，特定位置没有“警、使”等特殊车辆；
+   * 2. 由“可用键盘管理器”根据当前预设车牌号码，返回当前键位序号可用的键位。即，当前布局中哪些可点击，哪些不可点击。
+   * 3. 由混合器，将“键盘布局”和“可用键位”混合，输出键盘列表，由界面根据这些键位数据来渲染界面。
+   *
+   * @param {* keyboardType} 键盘类型
+   * @param {* currentIndex} 当前键位Index
    * @param {* presetNumber} 预设车牌号码
-   * @param {* numberType} 车牌号码类型 默认为0,表示自动探测版本类型。也可以指定为5,表示新能源车牌
+   * @param {* numberType} 车牌号码类型
    */
   function _update(options) {
     let { keyboardType, currentIndex, presetNumber, numberType } = options;
     // 检查参数
     if (
       keyboardType === undefined ||
-      keyboardType < KB_TYPES.FULL ||
-      keyboardType > KB_TYPES.CIVIL_SPEC
+      keyboardType < def.KB_TYPES.FULL ||
+      keyboardType > def.KB_TYPES.CIVIL_SPEC
     ) {
       throw new RangeError(
         '参数(keyboardType)范围必须在[0, 2]之间，当前: ' + keyboardType
@@ -732,14 +479,14 @@ module.exports = (function() {
     if (numberType === undefined || numberType !== parseInt(numberType, 10)) {
       throw new TypeError('参数(numberType)必须为整数数值');
     }
-    var detectedNumberType = detectNumberTypeOf(presetNumber);
+    var detectedNumberType = hlp.detectNumberTypeOf(presetNumber);
     // 如果预设车牌号码不为空，车牌类型为自动探测，则尝试
     var presetNumberType = numberType;
-    if (presetNumber.length > 0 && numberType === NUM_TYPES.AUTO_DETECT) {
+    if (presetNumber.length > 0 && numberType === def.NUM_TYPES.AUTO_DETECT) {
       presetNumberType = detectedNumberType;
     }
-    let limitLength = NUM_TYPES.lenOf(presetNumberType);
-    let presetLength = presetNumber.length;
+    var limitLength = def.NUM_TYPES.lenOf(presetNumberType);
+    var presetLength = presetNumber.length;
     currentIndex = Math.min(currentIndex, limitLength - 1);
     if (presetLength > limitLength) {
       throw new RangeError(
@@ -751,14 +498,14 @@ module.exports = (function() {
           limitLength
       );
     }
-    let args = {
+    var args = {
       index: currentIndex,
       number: presetNumber,
       keyboardType: keyboardType,
       numberType: presetNumberType
     };
     // 处理键位布局
-    let output = __clone(_GlobalConf.layoutProvider.process(args));
+    var output = __clone(_GlobalConf.layoutProvider.process(args));
     // 传递一些参数到外部
     output.index = args.index;
     output.presetNumber = args.number;
@@ -780,28 +527,29 @@ module.exports = (function() {
    * @param {Number} numberType 车牌类型
    */
   function _detectNumberType(presetNumber, numberType) {
-    let detectedNumberType = detectNumberTypeOf(presetNumber);
+    let detectedNumberType = hlp.detectNumberTypeOf(presetNumber);
     // 如果预设车牌号码不为空，车牌类型为自动探测，则尝试
     let presetNumberType = numberType;
-    if (presetNumber.length > 0 && numberType === NUM_TYPES.AUTO_DETECT) {
+    if (presetNumber.length > 0 && numberType === def.NUM_TYPES.AUTO_DETECT) {
       presetNumberType = detectedNumberType;
     }
     return presetNumberType;
   }
 
   // 导出的对象包括两个属性：update函数、全局配置
-  let _export = {
+  var _export = {
     update: _update,
     config: _GlobalConf,
     detectNumberType: _detectNumberType
   };
+
   // 导出一些工具类函数
-  _export.$newKey = _keyOf;
+  _export.$newKey = hlp.keyOf;
   // 导出一些数据类型
-  _export.NUM_TYPES = NUM_TYPES;
-  _export.KEY_TYPES = KEY_TYPES;
-  _export.KEYBOARD_TYPES = KB_TYPES;
-  _export.VERSION = 'R1.0/2017.1117/iRain(SZ)';
+  _export.NUM_TYPES = def.NUM_TYPES;
+  _export.KEY_TYPES = def.KEY_TYPES;
+  _export.KEYBOARD_TYPES = def.KB_TYPES;
+  _export.VERSION = 'R1.2/2018.0509/iRain(SZ)';
 
   return _export;
-})();
+});
