@@ -1,21 +1,22 @@
 <template>
   <div class="mixed-keyboard-box">
-    <number-view :numberArray="numberArray"
-      :numberType="dyDisplayMode"
-      :currentIndex="options.currentIndex"
+    <number-view :number-array="numberArray"
+      :number-type="dyDisplayMode"
+      :current-index="options.currentIndex"
       @modechanged="onUserSetMode"
       @cellselected="onSelectedInput" />
-    <div class="divider" />
-    <slot></slot>
+    <slot />
     <single-keyboard ref="singleKeyboard"
+      :style="keyboardStyle"
+      :class="args.position"
       :args="options"
       :callbacks="singleCallbacks" />
   </div>
 </template>
 
 <script>
-import NumberView from './NumberView.vue';
-import SingleKeyboard from './SingleKeyboard';
+import NumberView from './number-view';
+import SingleKeyboard from './single-keyboard';
 let engine = require('./engine.js');
 export default {
   name: 'mixed-keyboard',
@@ -27,6 +28,10 @@ export default {
      * @param {String} provinceName 默认省份
      * @param {Boolean} forceChangeMode 是否强制切换键盘类型（忽略当前录入车牌有效性）
      * @param {Boolean} autoComplete 是否自动完成
+     * @param {Boolean} showConfirm 是否显示确定按钮
+     * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
+     * @param {String} align //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
+     * @param {String} position 键盘位置，取值范围 [static: 默认, bottom: 底部]
      */
     args: {
       type: Object,
@@ -59,7 +64,11 @@ export default {
         showShortCut: true, // 需要显示省份简称
         forceChangeMode: true, //是否强制切换键盘类型
         numberType: engine.NUM_TYPES.AUTO_DETECT, // 车用户设定的车牌号码类型 0：自动探测车牌类型，5:新能源车牌
-        autoComplete: true //是否自动完成
+        autoComplete: true, //是否自动完成
+        showConfirm: true, //是否显示确定按钮
+        showKeyTips: false, //是否显示按键提示框
+        align: 'center', //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
+        position: ''
       },
       numberArray: ['', '', '', '', '', '', ''], // 用户输入的车牌数据
       userChanged: false, //用户是否外部修改了车牌号码
@@ -111,19 +120,17 @@ export default {
     getNumberType() {
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
-      } else {
-        return engine.NUM_TYPES.AUTO_DETECT;
       }
+      return engine.NUM_TYPES.AUTO_DETECT;
     },
     dyDisplayMode() {
       // 用于显示的车牌类型
       if (this.options.numberType === engine.NUM_TYPES.NEW_ENERGY) {
         return engine.NUM_TYPES.NEW_ENERGY;
-      } else {
-        return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY
-          ? engine.NUM_TYPES.NEW_ENERGY
-          : engine.NUM_TYPES.AUTO_DETECT;
       }
+      return this.detectNumberType === engine.NUM_TYPES.NEW_ENERGY
+        ? engine.NUM_TYPES.NEW_ENERGY
+        : engine.NUM_TYPES.AUTO_DETECT;
     },
     /**
      * 预测的车牌类型
@@ -132,6 +139,18 @@ export default {
       return engine.detectNumberType(
         this.options.presetNumber,
         this.options.numberType
+      );
+    },
+    keyboardStyle() {
+      return this.$slots && this.$slots.default > 0
+        ? {}
+        : {
+            'margin-top': '.78125rem'
+          };
+    },
+    isCompleted() {
+      return this.numberArray.every(
+        num => num && num !== '' && num !== null && num !== undefined
       );
     }
   },
@@ -306,7 +325,7 @@ export default {
       if (originLength > 7) {
         output.push('');
       }
-      if (updateNumber != undefined && updateNumber.length != 0) {
+      if (updateNumber !== undefined && updateNumber.length !== 0) {
         let size = Math.min(8, updateNumber.length);
         for (let i = 0; i < size; i++) {
           output[i] = updateNumber.charAt(i);
@@ -342,21 +361,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-/* 键盘框的高度，占比为 80% */
-div.divider {
-  height: 3%;
-}
-div.keyboard-pad {
-  height: 77%;
-}
-div.mixed-keyboard-box {
-  height: auto;
-  div.input-widget {
-    height: 3rem;
-  }
-  .single-keyboard-box {
-    margin-top: 0.5rem;
+<style lang="scss">
+.mixed-keyboard-box {
+  .single-keyboard-box.bottom {
+    position: absolute;
+    bottom: 0.9375rem;
   }
 }
 </style>

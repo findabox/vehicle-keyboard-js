@@ -2,12 +2,14 @@
   <div class="single-keyboard-box">
     <keyboard-view :keyboard="dyKeyboard"
       :keycount="dyKeyCount"
+      :show-confirm="options.showConfirm"
+      :show-key-tips="options.showKeyTips"
       @keyclick="onClickKey"
       @moreclick="onClickShowAll" />
   </div>
 </template>
 <script>
-import KeyboardView from './KeyboardView.vue';
+import KeyboardView from './keyboard-view.vue';
 let engine = require('./engine.js');
 let provinces = require('./provinces.js');
 export default {
@@ -21,6 +23,9 @@ export default {
      * @param {String} provinceName 默认省份
      * @param {Number} numberType 用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
      * @param {Boolean} autoComplete 是否自动完成
+     * @param {Boolean} showConfirm 是否显示确定按钮
+     * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
+     * @param {String} align //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
      */
     args: {
       type: Object,
@@ -54,7 +59,10 @@ export default {
         numberType: 0, //用户预设车牌输入类型 0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)
         provinceName: '', //省份
         showShortCut: false, //是否显示快捷省份
-        autoComplete: true //是否自动完成
+        autoComplete: true, //是否自动完成
+        showConfirm: true, //是否显示确定按钮
+        showKeyTips: false, //是否显示按键提示框
+        align: 'center' //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
       },
       prevNumber: '', //缓存上次车牌
       layout: {},
@@ -63,6 +71,7 @@ export default {
   },
   created() {
     this.init(this.args);
+    engine.init(this.options);
   },
   computed: {
     dyKeyCount() {
@@ -95,12 +104,13 @@ export default {
      */
     init(args) {
       this.options = Object.assign({}, this.options, args);
+      !args.hasOwnProperty('showConfirm') && (this.options.showConfirm = true);
       //showShortCut 没有传递进来时，默认通过 provinceName 来判断
       !args.hasOwnProperty('showShortCut') &&
         this.$set(
           this.options,
           'showShortCut',
-          this.options.provinceName != undefined &&
+          this.options.provinceName !== undefined &&
             this.options.provinceName.length > 0
         );
     },

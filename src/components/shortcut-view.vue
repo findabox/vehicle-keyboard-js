@@ -60,19 +60,19 @@ ul.shortcut-row {
   height: 20%;
   li {
     -webkit-box-flex: 0.25;
-    -webkit-flex: 0 1 -webkit-calc((100% - 20px*4) / 5);
-    flex: 0 1 calc((100% - 20px*4) / 5);
+    -webkit-flex: 0 1 -webkit-calc((100% - 1.25rem * 4) / 5);
+    flex: 0 1 calc((100% - 1.25rem * 4) / 5);
     height: 100%;
   }
   /*按键左右间隔为5像素*/
   li:not(:last-child) {
-    margin-right: 20px;
+    margin-right: 1.25rem;
   }
 }
 
 div.showall {
   color: #29a0dc;
   font-size: 16px;
-  padding: 20px;
+  padding: 1.25rem;
 }
 </style>

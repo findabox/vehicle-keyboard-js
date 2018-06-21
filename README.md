@@ -1,107 +1,120 @@
 # 停车王车牌号码专用键盘 VehicleKeyboard - vue.js
 
-
-[Vue项目单组件引用请看这里](https://github.com/mvpleung/vehicle-keyboard-js/tree/v2#%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E6%A1%86%E6%B7%B7%E5%90%88%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
-
-
-`VehicleKeyboard`是停车王品牌的各端产品线的基础组件，专为提高中国车牌号码输入速度而定制开发的专用键盘组件，包括以下三个项目：
-
-- `Android` Android项目，为Android客户端定制包括输入组件、键盘组件及相关控制逻辑实现；
-- `iOS` iOS客户端项目，为iOS客户端定制包括输入组件、键盘组件及相关控制逻辑实现；
 - `JavaScript(Vue.js)` JavaScript(Vue.js)项目，为H5页面定制，包括Web、微信、支付宝等，同样包括输入组件、键盘组件及相关控制逻辑实现
 
-## 项目主页
+![](keyboard-v2.png)
 
-### Android 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-android](https://github.com/parkingwang/vehicle-keyboard-android)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-android](https://gitee.com/iRainIoT/vehicle-keyboard-android)
+### 安装
 
-### iOS 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-ios](https://github.com/parkingwang/vehicle-keyboard-ios)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-ios](https://gitee.com/iRainIoT/vehicle-keyboard-ios)
+- NPM
 
-### JavaScript Vue.js 版本
-- GitHub项目主页： [https://github.com/parkingwang/vehicle-keyboard-js](https://github.com/parkingwang/vehicle-keyboard-js)
-- OSChina项目主页： [https://gitee.com/iRainIoT/vehicle-keyboard-js](https://gitee.com/iRainIoT/vehicle-keyboard-js)
+```
+npm i vehicle-keyboard -S
+```
 
+- Script
 
-![](keyboard.jpeg)
+```
+<script src="path/dist/vehicle-keyboard.js"></script>
+```
 
-## 键盘输入框混合组件使用说明
+### 示例
 
-[键盘输入框混合组件(js文件版)](./MixedKeyboardUsage.md)
+Website at https://mvpleung.github.io/vehicle-keyboard-js/
 
-混合组件包括键盘和输入框两部分组件，具有完成的车牌输入逻辑。
+### 键盘输入框混合组件使用说明
 
-基于VUE.js实现的单组件，单JS文件，包含vue核心库，文件大小约 114KB。
+> 混合组件包括键盘和输入框两部分组件，具有完成的车牌输入逻辑。
 
+```template
+    <mixed-keyboard
+		:args="{presetNumber, autoComplete: false}"
+		:callbacks="{oncompleted, onkeypressed}">
+	</mixed-keyboard>
+```
 
-[键盘输入框混合组件(vue组件版)](./MixedKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+### 单键盘组件使用说明
 
-混合组件包括键盘和输入框两部分组件，具有完成的车牌输入逻辑。
+> 单键盘组件只包含键盘组件部分。
 
-基于VUE.js实现的单组件，不包含vue核心库，仅提供 .vue 文件用于 vue + webpack 项目打包使用。
+```template
+    <single-keyboard
+		:args="{presetNumber, autoComplete: false}"
+		:callbacks="{oncompleted, onkeypressed}">
+	</single-keyboard>
+```
 
-## 单键盘组件使用说明
+### 单键盘配置说明(args)
 
-[单键盘组件的使用方法(js文件版)](./SingleKeyboardUsage.md)
+| Field            | Type      | Description                                                                                          |
+| ---------------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| **presetNumber** | `String`  | `预设车牌号码。可以是空车牌号码或者完整车牌。注意：参数不可为空，当空车牌时，设置空字符串`           |
+| **keyboardType** | `Number`  | `键盘类型[0:全键盘，1：民用, 2：民用+特殊车辆]`                                                      |
+| **currentIndex** | `Number`  | `当前输入位置，默认为 0`                                                                             |
+| **provinceName** | `String`  | `默认省份`                                                                                           |
+| **numberType**   | `String`  | `用户预设车牌输入类型0：自动探测车牌类型，5:新能源车牌(engine.NUM_TYPES)`                            |
+| **autoComplete** | `Boolean` | `是否自动完成，默认为true`                                                                           |
+| **showConfirm**  | `Boolean` | `是否显示确认按钮，默认为true`                                                                       |
+| **showKeyTips**  | `Boolean` | `是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)`                                       |
+| **align**        | `String`  | `按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]` |
 
-单键盘组件只包含键盘组件部分。
+### 混合键盘配置说明(args)
 
-基于VUE.js实现的单组件，单JS文件，包含vue核心库，文件大小约 105KB。
+| Field               | Type      | Description                                                                                          |
+| ------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| **presetNumber**    | `String`  | `预设车牌号码。可以是空车牌号码或者完整车牌。注意：参数不可为空，当空车牌时，设置空字符串`           |
+| **keyboardType**    | `Number`  | `键盘类型[0:全键盘，1：民用, 2：民用+特殊车辆]`                                                      |
+| **provinceName**    | `String`  | `默认省份`                                                                                           |
+| **forceChangeMode** | `Boolean` | `是否强制切换键盘类型(忽略当前录入车牌有效性)`                                                       |
+| **autoComplete**    | `Boolean` | `是否自动完成，默认为true`                                                                           |
+| **showConfirm**     | `Boolean` | `是否显示确认按钮，默认为true`                                                                       |
+| **showKeyTips**     | `Boolean` | `是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)`                                       |
+| **align**           | `String`  | `按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]` |
+| **position**        | `String`  | `键盘展示位置，取值范围 [static: 默认, bottom: 底部]`                                                |
 
+### 事件说明(callbacks)
 
-[单键盘组件的使用方法(vue组件版)](./SingleKeyboardUsage.md#vue%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+| Event            | Params                           | Description                                                                 |
+| ---------------- | -------------------------------- | --------------------------------------------------------------------------- |
+| **onchanged**    | `presetNumber`,`isCompleted`     | `车牌变更`                                                                  |
+| **onkeypressed** | `key`                            | `键位监听`                                                                  |
+| **oncompleted**  | `presetNumber`,`isAutoCompleted` | `车牌输入完成，当 args.autoComplete 为 true 时，仅当点击 ‘确定’ 时，才调用` |
+| **onmessage**    | `message`                        | `消息提示`                                                                  |
 
-单键盘组件只包含键盘组件部分。
-
-基于VUE.js实现的单组件，不包含vue核心库，仅提供 .vue 文件用于 vue + webpack 项目打包使用。
-
-## 键盘逻辑引擎使用说明
+### 键盘逻辑引擎使用说明
 
 [键盘逻辑引擎使用说明](./Engine.md)
 
-## 车牌号码规则
+### 车牌号码规则
 
-1. 本公司整理的车牌号码规则：[停车王车牌号码专用键盘规则和设计说明](./NumberRules.md)
+1.  参见：[中国车牌号码编码规则全解](http://yoojia.xyz/2018/05/09/chinese-vehicle-number/)
+2.  参见：[中华人民共和国民用机动车号牌](https://zh.wikipedia.org/wiki/中华人民共和国民用机动车号牌)
 
-1. [中华人民共和国民用机动车号牌](https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E6%B0%91%E7%94%A8%E6%9C%BA%E5%8A%A8%E8%BD%A6%E5%8F%B7%E7%89%8C)
+### 已知问题
 
+- 在 Android4.4 以下的浏览器或者 WebView 中，由于不支持 CSS3 部分特性，会出现输入框界面宽度变化的问题；
 
-## 已知问题
+### 版本更新记录
 
-- 在 Android4.4 以下的浏览器或者WebView中，由于不支持CSS3部分特性，会出现输入框界面宽度变化的问题；
+### v2018.0621
 
-## 版本更新记录
+- 增加键盘样式配置
 
-### v2018.0205
+### v2018.0620
 
-- 增加自动完成参数，可配置是否自动完成；
-- 增加 vue 项目引用说明，详见使用说明
+- 增加大使馆车牌
+- 全键盘增加确认按钮
 
-### v2018.0202
+### v2018.0620
 
-- 增加单Vue组件引用方式，区别于原有的纯 js 引用 ；
-- 剔除原有 js 中打包在一起的 vuejs 源文件；
-- 增加单文件组件调用示例，参考 src/example；
+- 增加大使馆车牌
+- 全键盘增加确认按钮
 
-### v2017.1117
+### v2018.0619
 
-- 增加“民航”车牌类型；
-- 移除车牌号码末位“练”字符；
-- 调整键位圆角参数为4px；
-- 修复MixedKeyboard中单个可用按键没有自动提交的问题；
+- 修改基础尺寸单位为 rem
 
-### v2017.1108
-
-- 完成基础功能，更新文档并公开发布；
-
-
-## 维护
-
-- [陈永佳](https://github.com/yoojia) chenyongjia@parkingwang.com
-
-## License
+### License
 
     Copyright 2017 Xi'an iRain IOT Technology service CO., Ltd (ShenZhen)
 

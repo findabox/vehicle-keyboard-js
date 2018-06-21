@@ -1,35 +1,21 @@
 <template>
-  <div class="keyboard"
+  <div class="vehicle-keyboard"
     v-if="hasShortcut">
     <shortcut-view :shortcuts="shortcuts"
       @keyrowclick="onKeyClick"
       @showmoreclick="onShowMoreClick" />
   </div>
-  <div class="keyboard"
+  <div class="vehicle-keyboard"
     v-else>
-    <row-view :keys="keyboard.row0"
-      :keycount="keycount"
-      :rowcount="rc"
-      @keyrowclick="onKeyClick" />
-    <row-view :keys="keyboard.row1"
-      :keycount="keycount"
-      :rowcount="rc"
-      @keyrowclick="onKeyClick" />
-    <row-view :keys="keyboard.row2"
-      :keycount="keycount"
-      :rowcount="rc"
-      @keyrowclick="onKeyClick" />
-    <row-view :keys="keyboard.row3"
+    <row-view v-for="index in [0, 1, 2, 3, 4]"
+      :key="index"
+      v-if="(keyboard[`row${index}`] || []).length > 0"
+      :keys="keyboard[`row${index}`]"
       :keycount="keycount"
       :rowcount="rc"
       @keyrowclick="onKeyClick"
-      :isfunc="keyboard.row4.length == 0" />
-    <row-view :keys="keyboard.row4"
-      :keycount="keycount"
-      :rowcount="rc"
-      @keyrowclick="onKeyClick"
-      :isfunc="true"
-      v-if="keyboard.row4.length > 0" />
+      :isfunc="(keyboard[`row${index + 1}`] || []).length === 0"
+      :show-confirm="showConfirm" />
     <div class="r-border keytip"
       v-if="tipText != ''"
       :style="{'left': tipPosX, 'top': tipPosY}">{{ tipText }} </div>
@@ -37,8 +23,8 @@
 </template>
 
 <script>
-import KeyRowView from './KeyRowView.vue';
-import ShortcutView from './ShortcutView.vue';
+import KeyRowView from './key-row-view';
+import ShortcutView from './shortcut-view';
 export default {
   props: {
     /**
@@ -54,6 +40,19 @@ export default {
     keycount: {
       type: Number,
       default: 0
+    },
+    /**
+     * 是否显示确认按钮
+     */
+    showConfirm: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 是否显示按键提示框
+     */
+    showKeyTips: {
+      type: Boolean
     }
   },
   data() {
@@ -110,7 +109,7 @@ export default {
      */
     onKeyClick(key, evt) {
       this.$emit('keyclick', key);
-      evt && this.onKeyEvent(key, evt);
+      this.showKeyTips && evt && this.onKeyEvent(key, evt);
     },
     /**
      * 显示更多事件

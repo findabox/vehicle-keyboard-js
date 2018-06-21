@@ -1,0 +1,116 @@
+/*键盘容器*/
+.single-keyboard-box,
+.mixed-keyboard-box {
+  /*通过Border来设置外边距。颜色与背景色相同*/
+  background: #eef0f4;
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  height: 11.5rem;
+
+  [role='button'],
+  input[type='button'],
+  button {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    background: none;
+    border: 0;
+    line-height: inherit;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .r-border {
+    border-radius: 0.3125rem; /*5px*/
+    /*低版本Android WebView兼容性处理*/
+    border-top-left-radius: 0.3125rem;
+    border-top-right-radius: 0.3125rem;
+    border-bottom-left-radius: 0.3125rem;
+    border-bottom-right-radius: 0.3125rem;
+    background-color: #ffffff;
+    box-sizing: border-box;
+  }
+
+  .vehicle-keyboard {
+    height: 100%;
+    // border: 10px solid #eef0f4;
+    padding: 0.46875rem;
+    background-color: #e4e4e4;
+  }
+
+  /*按键提示*/
+  .keytip {
+    position: absolute;
+    background: white;
+    margin: 0 auto;
+    width: 1.5625rem;
+    height: 1.875rem;
+    line-height: 1.875rem;
+    color: #418af9;
+    font-size: 0.875rem;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 0.3125rem;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 2px #dddddd;
+  }
+
+  /*统一按钮样式*/
+  button.key {
+    color: #373737;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    outline: none;
+    //禁止长按选择文字
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  button.disabled,
+  button.key:disabled {
+    color: #dddddd;
+  }
+
+  button.key:active:not(:disabled) {
+    background-color: #b9c2cf;
+    color: #ffffff;
+  }
+
+  @media all and (min-width: 720px) {
+    button.key {
+      font-size: 7vw;
+    }
+  }
+  @media all and (min-width: 640px) {
+    button.key,
+    .keytip {
+      font-size: 6vw;
+    }
+  }
+  @media all and (max-width: 480px) {
+    button.key,
+    .keytip {
+      font-size: 5vw;
+    }
+  }
+  @media all and (max-width: 360px) {
+    button.key,
+    .keytip {
+      font-size: 4.5vw;
+    }
+  }
+}

@@ -1,11 +1,12 @@
 <template>
   <div>
     <h5>{{args.presetNumber}}</h5>
-    <single-keyboard :args="args" :callbacks="callbacks" />
+    <single-keyboard :args="args"
+      :callbacks="callbacks" />
   </div>
 </template>
 <script>
-import SingleKeyboard from '@/components/vehicle/SingleKeyboard';
+import SingleKeyboard from './components/single-keyboard';
 export default {
   data() {
     return {
@@ -46,7 +47,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
 
 
