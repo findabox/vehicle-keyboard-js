@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import SingleKeyboard from '@/components/single-keyboard';
+import SingleKeyboard from './components/single-keyboard';
 export default {
   data() {
     return {
@@ -47,7 +47,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
 
 

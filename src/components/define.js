@@ -5,6 +5,15 @@
 
   // 定义键盘引擎内部的一些参数和类型说明
   // Author: 陈哈哈 yoojiachen@gmail.com
+  /**
+   * 对齐类型
+   */
+  var KB_ALIGN = {
+    // 居中对齐
+    CENTER: 'center',
+    // 两端对齐
+    JUSTIFY: 'justify'
+  };
 
   /**
    * 键盘类型
@@ -110,6 +119,7 @@
     KB_TYPES: KB_TYPES,
     KEY_TYPES: KEY_TYPES,
     NUM_TYPES: NUM_TYPES,
+    KB_ALIGN: KB_ALIGN,
 
     S_CIVIL_PVS:
       '京津沪晋冀蒙辽吉黑苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新',

@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import MixedKeyboard from '../components/mixed-keyboard';
+import MixedKeyboard from './components/mixed-keyboard';
 export default {
   data() {
     return {
@@ -47,7 +47,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
 
 

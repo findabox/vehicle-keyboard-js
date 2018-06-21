@@ -1,6 +1,6 @@
-import NumberView from './number-view';
-import SingleKeyboard from './single-keyboard';
-import MixedKeyboard from './mixed-keyboard';
+import NumberView from './components/number-view';
+import SingleKeyboard from './components/single-keyboard';
+import MixedKeyboard from './components/mixed-keyboard';
 
 const components = [NumberView, SingleKeyboard, MixedKeyboard];
 

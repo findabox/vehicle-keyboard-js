@@ -3,7 +3,7 @@
     :class="[ {'funcrow': (isfunc === true)}, ('rowsof-' + rowcount) ]">
     <li v-for="(key, i) in keys"
       :key="i"
-      :class="('keysof-' + keycount)">
+      :class="('keysof-' + keyLength)">
       <button tag="button"
         ref="buttonKey"
         class="key r-border txt-key"
@@ -73,6 +73,13 @@ export default {
   watch: {
     keys(val) {
       this.initKeys();
+    }
+  },
+  computed: {
+    keyLength() {
+      return this.keys.length > this.keycount
+        ? this.keys.length
+        : this.keycount;
     }
   },
   methods: {

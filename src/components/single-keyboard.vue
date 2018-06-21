@@ -25,6 +25,7 @@ export default {
      * @param {Boolean} autoComplete 是否自动完成
      * @param {Boolean} showConfirm 是否显示确定按钮
      * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
+     * @param {String} align //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
      */
     args: {
       type: Object,
@@ -60,7 +61,8 @@ export default {
         showShortCut: false, //是否显示快捷省份
         autoComplete: true, //是否自动完成
         showConfirm: true, //是否显示确定按钮
-        showKeyTips: false //是否显示按键提示框
+        showKeyTips: false, //是否显示按键提示框
+        align: 'center' //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
       },
       prevNumber: '', //缓存上次车牌
       layout: {},
@@ -69,6 +71,7 @@ export default {
   },
   created() {
     this.init(this.args);
+    engine.init(this.options);
   },
   computed: {
     dyKeyCount() {

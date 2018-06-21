@@ -30,6 +30,7 @@ export default {
      * @param {Boolean} autoComplete 是否自动完成
      * @param {Boolean} showConfirm 是否显示确定按钮
      * @param {Boolean} showKeyTips 是否显示按键提示框(点击按键弹出当前按键内容提示，类似输入法)
+     * @param {String} align //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
      * @param {String} position 键盘位置，取值范围 [static: 默认, bottom: 底部]
      */
     args: {
@@ -66,6 +67,7 @@ export default {
         autoComplete: true, //是否自动完成
         showConfirm: true, //是否显示确定按钮
         showKeyTips: false, //是否显示按键提示框
+        align: 'center', //按键对齐方式，取值范围 [center: 居中对齐，经典键盘模式(默认), justify: 两端对齐，位数不够补充空白]
         position: ''
       },
       numberArray: ['', '', '', '', '', '', ''], // 用户输入的车牌数据
