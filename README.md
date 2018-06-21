@@ -15,7 +15,7 @@ npm i vehicle-keyboard -S
 - Script
 
 ```
-<script src="path/dist/vehicle-keyboard.js"></script>
+<script src="path/dist/index.js"></script>
 ```
 
 ### 示例
