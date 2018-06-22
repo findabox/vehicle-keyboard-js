@@ -22,6 +22,7 @@
           class="mode--radio"
           type="radio"
           value="1"
+          @change="onModeChanged"
           name="mode-switcher">
         <span class="mode--radioInput" />
         <span class="mode--radioText">普通车牌</span>
@@ -31,6 +32,7 @@
           class="mode--radio"
           type="radio"
           value="2"
+          @change="onModeChanged"
           name="mode-switcher">
         <span class="mode--radioInput" />
         <span class="mode--radioText">新能源车牌</span>
@@ -77,11 +79,6 @@ export default {
       console.error(error);
     }
   },
-  watch: {
-    model(val) {
-      this.onModeChanged();
-    }
-  },
   methods: {
     showHolder(text, index, currentIndex) {
       return (
@@ -90,6 +87,12 @@ export default {
     },
     handleHolder(text, index, currentIndex) {
       return this.showHolder(text, index, currentIndex) ? '|' : text;
+    },
+    /**
+     * 重置Mode
+     */
+    resetMode() {
+      this.model = this.model === '1' ? '2' : '1';
     },
     /**
      * 车牌显示模式切换

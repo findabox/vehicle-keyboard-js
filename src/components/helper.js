@@ -56,12 +56,12 @@ export function contains(src, item) {
 function isProvince(str) {
   return contains(def.S_CIVIL_PVS, str);
 }
-
+export { isProvince };
 /** 探测车牌号码的模式 */
 export function detectNumberTypeOf(presetNumber) {
   if (presetNumber.length === 0) {
     return def.NUM_TYPES.AUTO_DETECT;
-  } 
+  }
   var first = presetNumber.charAt(0);
   if (contains(def.S_PLA2012_PVS, first)) {
     return def.NUM_TYPES.PLA2012;
@@ -74,22 +74,17 @@ export function detectNumberTypeOf(presetNumber) {
   } else if (def.C_W === first) {
     if (presetNumber.length >= 3 && isProvince(presetNumber.charAt(2))) {
       return def.NUM_TYPES.WJ2012;
-    } 
+    }
     return def.NUM_TYPES.WJ2007;
-      
   } else if (isProvince(first)) {
     if (presetNumber.length === 8) {
       // 新能源车牌：
       if (/\W[A-Z][0-9DF][0-9A-Z]\d{3}[0-9DF]/.test(presetNumber)) {
         return def.NUM_TYPES.NEW_ENERGY;
-      } 
+      }
       return def.NUM_TYPES.UNKNOWN;
-        
-    } 
+    }
     return def.NUM_TYPES.CIVIL;
-      
-  } 
+  }
   return def.NUM_TYPES.UNKNOWN;
-    
-  
 }
