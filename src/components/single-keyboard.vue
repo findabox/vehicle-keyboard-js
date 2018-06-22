@@ -45,7 +45,9 @@ export default {
           /**车牌完成监听(车牌号，是否自动完成)*/
           oncompleted(presetNumber, isAutoCompleted) {},
           /**错误回调*/
-          onmessage(message) {}
+          onmessage(message) {},
+          /**键盘更新回调*/
+          updateKeyboard() {}
         };
       }
     }
@@ -155,6 +157,9 @@ export default {
       } catch (err) {
         console.error('SingleKeyboard:::', err);
       }
+      this.callbacks &&
+        this.callbacks.updateKeyboard &&
+        this.callbacks.updateKeyboard(this.layout);
       this.autocommitsinglekey(this.layout);
       return this.layout;
     },
@@ -180,7 +185,7 @@ export default {
         });
         if (availableKeys.length === 1) {
           setTimeout(() => {
-            this.onClickKey(availableKeys[0]);
+            this.onClickKey(availableKeys[0], layout.index);
           }, 32);
         }
       }
@@ -203,7 +208,13 @@ export default {
     /**
      * 键位点击回调
      */
-    onClickKey(key) {
+    onClickKey(key, index) {
+      if (
+        !(index
+          ? this.options.presetNumber.substr(index, 1) !== key.text
+          : true)
+      )
+        return;
       key.FUN_DEL = engine.KEY_TYPES.FUN_DEL === key.keyCode; //删除
       key.FUN_OK = engine.KEY_TYPES.FUN_OK === key.keyCode; //确认
       this.currentKey = key;
@@ -211,6 +222,11 @@ export default {
         let autoSlice = this.callbacks.onkeypressed
           ? this.callbacks.onkeypressed(key)
           : true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
+        if (!autoSlice) {
+          console.log(
+            `当前车牌录入模式为手动，如需自动处理车牌录入，请将 onkeypressed 返回 true`
+          );
+        }
         if (key.FUN_DEL) {
           if (autoSlice) {
             this.options.presetNumber = this.options.presetNumber.slice(

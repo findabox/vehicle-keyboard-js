@@ -1,6 +1,7 @@
 <template>
   <div class="mixed-keyboard-box">
-    <number-view :number-array="numberArray"
+    <number-view ref="numberView"
+      :number-array="numberArray"
       :number-type="dyDisplayMode"
       :current-index="options.currentIndex"
       @modechanged="onUserSetMode"
@@ -62,7 +63,7 @@ export default {
         provinceName: '', //省份
         currentIndex: 0, // 当前用户输入框已选中的序号
         showShortCut: true, // 需要显示省份简称
-        forceChangeMode: true, //是否强制切换键盘类型
+        forceChangeMode: false, //是否强制切换键盘类型
         numberType: engine.NUM_TYPES.AUTO_DETECT, // 车用户设定的车牌号码类型 0：自动探测车牌类型，5:新能源车牌
         autoComplete: true, //是否自动完成
         showConfirm: true, //是否显示确定按钮
@@ -95,6 +96,19 @@ export default {
         },
         onmessage: message => {
           this.callMethod(this.callbacks.onmessage, message);
+        },
+        updateKeyboard: keyboard => {
+          // 将识别结果的车牌模式同步到用户选择模式上
+          if (keyboard.numberType === engine.NUM_TYPES.NEW_ENERGY) {
+            this.options.numberType = engine.NUM_TYPES.NEW_ENERGY;
+          } else {
+            this.options.numberType = engine.NUM_TYPES.AUTO_DETECT;
+          }
+          this.syncInputLength(
+            keyboard.numberType,
+            this.options.numberType ===
+              engine.NUM_TYPES.NEW_ENERGY /*force to set NewEnergy mode*/
+          );
         }
       }
     };
@@ -232,9 +246,10 @@ export default {
     onUserSetMode() {
       // 如果当前车牌为武警车牌，不可切换：
       if (
-        this.detectNumberType === engine.NUM_TYPES.WUJING ||
-        this.detectNumberType === engine.NUM_TYPES.WUJING_LOCAL
+        this.detectNumberType === engine.NUM_TYPES.WJ2007 ||
+        this.detectNumberType === engine.NUM_TYPES.WJ2012
       ) {
+        this.$refs.numberView.resetMode();
         this.callMethod(this.callbacks.onmessage, '武警车牌，请清空再切换');
         return;
       }
@@ -254,6 +269,7 @@ export default {
           ) {
             this.options.numberType = engine.NUM_TYPES.NEW_ENERGY;
           } else {
+            this.$refs.numberView.resetMode();
             this.callMethod(
               this.callbacks.onmessage,
               '非新能源车牌，请清空再切换'
@@ -332,6 +348,28 @@ export default {
         }
       }
       return output;
+    },
+    /**
+     * 同步输入长度
+     */
+    syncInputLength(mode, forceNewEnergyMode) {
+      // 键盘引擎根据输入参数，会自动推测出当前车牌的类型。
+      // 如果当前用户没有强制设置，更新键盘的输入框长度以适当当前的车牌类型,（指地方武警车牌，长度为8位）
+      if (forceNewEnergyMode) {
+        // 强制新能源类型，应当设置为：8位
+        this.setLengthTo8();
+      } else {
+        if (
+          engine.NUM_TYPES.WJ2012 === mode ||
+          engine.NUM_TYPES.NEW_ENERGY === mode
+        ) {
+          // 地方武警，应当设置为：8位
+          this.setLengthTo8();
+        } else {
+          // 其它车牌，应当设置为：7位
+          this.setLengthTo7();
+        }
+      }
     },
     /**
      * 执行回调

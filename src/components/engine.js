@@ -99,8 +99,8 @@
       {
         row0: hlp.keysOf(def.S_NUM + def.S_CIVIL_PVS.substr(0, 1)),
         row1: hlp.keysOf(def.S_CIVIL_PVS.substr(1, 11)),
-        row2: hlp.keysOf(def.S_CIVIL_PVS.substr(12, 10)),
-        row3: hlp.keysOf(def.S_CIVIL_PVS.substr(22, 9) + def.C_DEL)
+        row2: hlp.keysOf(def.S_CIVIL_PVS.substr(12, 11)),
+        row3: hlp.keysOf(def.S_CIVIL_PVS.substr(23, 9) + def.S_DEL_OK)
       },
       _LAYOUT_SPEC_FULL,
       2

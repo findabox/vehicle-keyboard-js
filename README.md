@@ -98,6 +98,8 @@ Website at https://mvpleung.github.io/vehicle-keyboard-js/
 
 ### v2018.0622
 
+- 修复特殊车辆录入异常
+- 增加普通车辆、新能源车辆切换限制
 - 兼容桌面浏览器，兼容 IE9 及以上浏览器
 
 ### v2018.0621
