@@ -1,6 +1,6 @@
 # 停车王车牌号码专用键盘 VehicleKeyboard - vue.js
 
-- `JavaScript(Vue.js)` JavaScript(Vue.js)项目，为H5页面定制，包括Web、微信、支付宝等，同样包括输入组件、键盘组件及相关控制逻辑实现
+- `JavaScript(Vue.js)` JavaScript(Vue.js)项目，为 H5 页面定制，包括 Web、微信、支付宝等，同样包括输入组件、键盘组件及相关控制逻辑实现
 
 ![](keyboard-v2.png)
 
@@ -95,6 +95,10 @@ Website at https://mvpleung.github.io/vehicle-keyboard-js/
 - 在 Android4.4 以下的浏览器或者 WebView 中，由于不支持 CSS3 部分特性，会出现输入框界面宽度变化的问题；
 
 ### 版本更新记录
+
+### v2018.0622
+
+- 兼容桌面浏览器，兼容 IE9 及以上浏览器
 
 ### v2018.0621
 

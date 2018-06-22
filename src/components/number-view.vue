@@ -139,12 +139,20 @@ export default {
       height: 2.8125rem;
       border: 0.0625rem solid rgba(113, 154, 255, 1);
       border-radius: 0.25rem;
+      overflow: hidden;
       li {
         height: 2.8125rem;
         -webkit-box-flex: 1;
         -webkit-flex: 1;
         flex: 1;
         &.cell {
+          float: left;
+          &.lengthof-7 {
+            width: calc(100% / 7);
+          }
+          &.lengthof-8 {
+            width: calc(100% / 8);
+          }
           &:first-child:not(.show-holder) {
             background-color: rgba(113, 154, 255, 1);
             button {
