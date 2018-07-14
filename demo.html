@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, user-scalable=no">
+  <title>停车王车牌专用键盘</title>
+  <style>
+    * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      margin: 0 auto;
+      padding: 0 auto;
+      height: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    div#single-keyboard-box,
+    div#mixed-keyboard-box {
+      height: 40%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <div id="single-keyboard-box">
+        <single-keyboard :args="args" :callbacks="callbacks"/>
+    </div>
+    <script src="SingleKeyboard.js"></script>  -->
+  <div id="app">
+    <mixed-keyboard :args="args" :callbacks="callbacks" />
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"></script>
+  <script src="dist/index.js"></script>
+</body>
+<script>
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      args: {
+        keyboardType: 0,
+        position: 'bottom'
+      },
+      callbacks: {
+        //车牌变更
+        onchanged: (presetNumber, isCompleted) => {
+          // this.args.presetNumber = presetNumber;
+          console.log(
+            '当前车牌[变更]：' + presetNumber + ', 已完成:' + isCompleted
+          );
+        },
+        //键位监听
+        onkeypressed: key => {
+          console.log('当前按键：' + key.text);
+        },
+        //车牌输入完成，当 args.autoComplete 为 true 时，仅当点击 ‘确定’ 时，才调用
+        oncompleted: (presetNumber, isAutoCompleted) => {
+          this.numberArray = presetNumber.split('');
+          console.log(
+            '当前车牌[完成]：' + presetNumber + ', 自动完成:' + isAutoCompleted
+          );
+        },
+        //消息提示
+        onmessage: function (message) {
+          console.info(message);
+        }
+      }
+    }
+  })
+</script>
+
+</html>
