@@ -170,6 +170,14 @@ export default {
             line-height: 180%;
           }
         }
+        &:not(:first-child)[selected='selected'] {
+          padding: 2px;
+          background-color: #719aff;
+          .key {
+            height: calc(2.8125rem - 4px);
+            background-color: white;
+          }
+        }
         &[selected='selected'].show-holder {
           button {
             font-size: 1.1875rem;
