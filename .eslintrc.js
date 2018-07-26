@@ -22,7 +22,7 @@ module.exports = {
     // 'eslint:recommended',
     'plugin:vue/essential'
   ],
-  plugins: ['vue', 'flowtype'],
+  plugins: ['vue'],
   // add your custom rules here
   rules: {
     // allow paren-less arrow functions

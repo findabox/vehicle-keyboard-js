@@ -210,21 +210,21 @@ export default {
      */
     onClickKey(key, index) {
       if (
-        !(index
-          ? this.options.presetNumber.substr(index, 1) !== key.text
-          : true)
+        !(index ?
+          this.options.presetNumber.substr(index, 1) !== key.text :
+          true)
       )
         return;
       key.FUN_DEL = engine.KEY_TYPES.FUN_DEL === key.keyCode; //删除
       key.FUN_OK = engine.KEY_TYPES.FUN_OK === key.keyCode; //确认
       this.currentKey = key;
       try {
-        let autoSlice = this.callbacks.onkeypressed
-          ? this.callbacks.onkeypressed(key)
-          : true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
+        let autoSlice = this.callbacks.onkeypressed ?
+          this.callbacks.onkeypressed(key) :
+          true; //是否自动处理车牌录入，false：交由调用者在 onkeypressed 中处理车牌信息
         if (!autoSlice) {
           console.log(
-            `当前车牌录入模式为手动，如需自动处理车牌录入，请将 onkeypressed 返回 true`
+            '当前车牌录入模式为手动，如需自动处理车牌录入，请将 onkeypressed 返回 true'
           );
         }
         if (key.FUN_DEL) {
@@ -255,9 +255,9 @@ export default {
               this.options.presetNumber += key.text;
             }
           }
-          this.options.currentIndex === 0
-            ? this.options.currentIndex++
-            : this.options.currentIndex < this.layout.numberLimitLength - 1 &&
+          this.options.currentIndex === 0 ?
+            this.options.currentIndex++ :
+            this.options.currentIndex < this.layout.numberLimitLength - 1 &&
               this.options.currentIndex++;
         }
       } finally {

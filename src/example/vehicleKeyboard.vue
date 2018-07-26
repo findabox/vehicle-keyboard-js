@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5>{{args.presetNumber}}</h5>
+    <h5>{{ args.presetNumber }}</h5>
     <single-keyboard :args="args"
       :callbacks="callbacks" />
   </div>
