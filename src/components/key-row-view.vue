@@ -10,15 +10,17 @@
         class="key r-border txt-key"
         :class="[ ('keycodeof-' + key.keyCode), {'disabled': (!key.enabled)}]"
         :disabled="(!key.enabled)"
-        @click="onButtonClick(key, arguments[0])">
+        v-tap="{method: onButtonClick, params: { key } }">
         {{ buttonTextFilter(key) }}
       </button>
     </li>
   </ul>
 </template>
 <script>
+import VueTap from './tap';
 import { KEY_TYPES } from './engine';
 export default {
+  directives: VueTap,
   props: {
     /**
      * 行数
@@ -84,7 +86,8 @@ export default {
     IEVersion() {
       var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
       var isIE =
-        userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1; //判断是否IE<11浏览器
+        userAgent.indexOf('compatible') > -1 && 
+          userAgent.indexOf('MSIE') > -1; //判断是否IE<11浏览器
       var isEdge = userAgent.indexOf('Edge') > -1 && !isIE; //判断是否IE的Edge浏览器
       var isIE11 =
         userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1;
@@ -176,11 +179,10 @@ export default {
     /**
      * 键位点击事件
      * @param {Object} key 键位对象
-     * @param {Event} event 按钮事件Event
      */
-    onButtonClick(key, event) {
+    onButtonClick(key, e) {
       if (key.enabled) {
-        this.$emit('keyrowclick', key, event);
+        this.$emit('keyrowclick', key, e);
       }
     }
   }
