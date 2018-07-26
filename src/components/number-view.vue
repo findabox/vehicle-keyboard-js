@@ -150,32 +150,42 @@ export default {
         flex: 1;
         &.cell {
           float: left;
+          // line-height: 2.8rem;
+          background-color: rgba(113, 154, 255, 1);
           &.lengthof-7 {
-            width: calc(100% / 7);
+            width: calc((100% - 0.0625rem * 8) / 7);
+            &:first-child {
+              flex: 1.02279;
+              width: calc((100% - 0.0625rem * 8) / 7 + 0.0625rem);
+            }
           }
           &.lengthof-8 {
-            width: calc(100% / 8);
+            width: calc((100% - 0.0625rem * 9) / 8);
+            &:first-child {
+              flex: 1.02614;
+              width: calc((100% - 0.0625rem * 9) / 8 + 0.0625rem);
+            }
           }
           &:first-child:not(.show-holder) {
-            background-color: rgba(113, 154, 255, 1);
             button {
               color: #ffffff;
+              background-color: transparent;
             }
           }
           button {
             font-size: 1.5625rem;
             color: rgba(113, 154, 255, 1);
+            background-color: white;
           }
           button.line-height-180 {
             line-height: 180%;
           }
         }
         &:not(:first-child)[selected='selected'] {
-          padding: 2px;
-          background-color: #719aff;
           .key {
-            height: calc(2.8125rem - 4px);
-            background-color: white;
+            width: calc(100% - 0.0625rem * 2);
+            height: calc(100% - 0.0625rem * 2);
+            margin-top: 0.0625rem;
           }
         }
         &[selected='selected'].show-holder {
@@ -184,11 +194,8 @@ export default {
             color: #b2b2b2;
           }
         }
-        &:not(:last-child) {
-          border-right: 0.0625rem solid rgba(113, 154, 255, 1);
-        }
-        &:last-child[selected='selected'] {
-          border-radius: 0 0.25rem 0.25rem 0;
+        &:not(:first-child) {
+          padding-left: 0.0625rem;
         }
       }
     }
