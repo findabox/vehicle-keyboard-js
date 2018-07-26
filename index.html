@@ -22,8 +22,12 @@
         html,
         body {
             margin: 0 auto;
-            padding: 15px 10% 0 10%;
+            padding: 10px;
         }
+		
+		#app {
+			height: 380px;
+		}
 
         .el-button {
             display: inline-block;
@@ -45,7 +49,6 @@
             padding: 12px 20px;
             font-size: 14px;
             border-radius: 4px;
-            margin-top: 15%;
             color: #fff;
             background-color: #409eff;
             border-color: #409eff;
@@ -66,12 +69,14 @@
     <div id="app">
         <mixed-keyboard :args="args" :callbacks="callbacks" />
     </div>
-    <button type="button" class="el-button" onClick="document.querySelector('.code').style.display='block'">
-        <span>查看Demo 代码</span>
-    </button>
-    <div class="code">
-        <script async src="https://jsfiddle.net/mvpleung/8v503zmu/embed/"></script>
-    </div>
+    <div class="code-content">
+		<button type="button" class="el-button" onClick="document.querySelector('.code').style.display='block'">
+			<span>查看Demo 代码</span>
+		</button>
+		<div class="code">
+			<script async src="https://jsfiddle.net/mvpleung/8v503zmu/embed/"></script>
+		</div>
+	</div>
     <script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"></script>
     <script src="dist/index.js"></script>
 </body>

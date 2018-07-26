@@ -10,7 +10,7 @@
           :selected="(index === currentIndex)">
           <button class="key"
             :style="{'line-height': numberType !== undefined ? '1' : '180%'}"
-            @click="onCellSelected(index)">
+            v-tap="{method: onCellSelected, params: { index }}">
             {{ handleHolder(text, index, currentIndex) }}
           </button>
         </li>
@@ -42,7 +42,9 @@
 </template>
 
 <script>
+import VueTap from './tap';
 export default {
+  directives: VueTap,
   name: 'number-view',
   props: {
     /**

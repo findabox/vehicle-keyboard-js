@@ -7,15 +7,17 @@
           tag="button"
           :class="('keycodeof-' + key.keyCode)"
           :disabled="(!key.enabled)"
-          @click="onButtonClick(key)">{{ key.text }}</button>
+          v-tap="{ method: onButtonClick, params: { key } }">{{ key.text }}</button>
       </li>
     </ul>
     <div class="showall needclicks"
-      @click="onShowMoreClick">显示全部</div>
+      v-tap="{ method: onShowMoreClick }">显示全部</div>
   </div>
 </template>
 <script>
+import VueTap from './tap';
 export default {
+  directives: VueTap,
   props: {
     /**
      * 快捷显示
