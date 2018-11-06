@@ -13,7 +13,8 @@ var plugin = {
       evt.stopPropagation();
       evt.cancelBubble = true;
       var value = el.binding_ref.value;
-      value.method.call(this, ...Object.values(value.params || {}), evt);
+      value.event = evt;
+      value.methods.call(this, value);
     };
     el.tapEventHandler_nop = function(evt) {};
     if (_IS_MOBILE) {
